@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0
+
+- **Kawaii Workbench** (opt-in: `uwu: Enable Kawaii Workbench`) turns VS Code into uwu IDE:
+  - a boot splash, floating candy panels, window-wide petals and the Nunito UI font
+  - custom-drawn activity icons, candy-pill tabs, ♡/♥ tree arrows and a branded title bar
+  - a command palette with a rainbow border, and bow/paw stickers
+  - click heart bursts, typing sparkles, save confetti, and a floating mascot with tips
+- Backups, checksum fix, a sudo fallback for system installs, an offer to re-apply after VS Code
+  updates, and `uwu: Disable Kawaii Workbench` to undo it all
+- New **uwu cuties** file icon theme
+- `uwu.workbench.*` settings for each Kawaii Workbench effect
+
 ## 0.1.1
 
 - Petals no longer jump or flicker while scrolling. They're now attached to the document like

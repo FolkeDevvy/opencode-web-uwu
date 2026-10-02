@@ -1,0 +1,669 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ♡ uwu IDE ✧ the Kawaii Workbench for uwu-code
+   Injected into VS Code by "uwu: Enable Kawaii Workbench". Every rule is scoped
+   to the uwu colour themes, so picking any other theme gives you plain VS Code
+   back without uninstalling anything.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "uwu Nunito";
+  src: url("./fonts/Nunito-latin.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: block;
+}
+
+@property --uwu-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ─────────────────────────────── palette ─────────────────────────────── */
+.monaco-workbench[class*="uwu-code-themes-uwu-"] {
+  --k-font: "uwu Nunito", "Nunito", "M PLUS Rounded 1c", "Quicksand", system-ui, sans-serif;
+  --k-radius: 18px;
+  --k-gap: 6px;
+  --k-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --vscode-font-family: var(--k-font) !important;
+}
+.monaco-workbench[class*="uwu-code-themes-uwu-"].vs-dark {
+  --k-window: #170d1d;
+  --k-card: #21142acc;
+  --k-card-solid: #21142a;
+  --k-panel: #2b1a36e6;
+  --k-raise: #362143;
+  --k-line: #ff8fc838;
+  --k-line-strong: #ff8fc870;
+  --k-text: #ffeaf6;
+  --k-muted: #c79dbb;
+  --k-pink: #ff8fc8;
+  --k-hot: #ff5fae;
+  --k-lav: #c7a2ff;
+  --k-mint: #8ff5cf;
+  --k-sky: #9fd8ff;
+  --k-butter: #ffe59a;
+  --k-ink: #2a0c22;
+  --k-glow: #ff8fc855;
+  --k-dot: #ff8fc812;
+  --k-shadow: 0 10px 30px #0a000f66, 0 0 0 1px var(--k-line);
+}
+.monaco-workbench[class*="uwu-code-themes-uwu-"].vs {
+  --k-window: #ffe1ef;
+  --k-card: #fff7fbd9;
+  --k-card-solid: #fff7fb;
+  --k-panel: #fff0f7eb;
+  --k-raise: #ffe4f1;
+  --k-line: #e8438f2e;
+  --k-line-strong: #e8438f66;
+  --k-text: #57264c;
+  --k-muted: #9a5f8a;
+  --k-pink: #e8438f;
+  --k-hot: #ff5fae;
+  --k-lav: #8a4fe0;
+  --k-mint: #13936a;
+  --k-sky: #2f86c9;
+  --k-butter: #b07d00;
+  --k-ink: #ffffff;
+  --k-glow: #ff5fae40;
+  --k-dot: #ff5fae1a;
+  --k-shadow: 0 10px 30px #e8438f26, 0 0 0 1px var(--k-line);
+}
+
+/* ═════════════════════════════ the whole window ═════════════════════════════ */
+body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"]) {
+  background:
+    radial-gradient(circle at 8% 0%, #ff8fc833, transparent 40%),
+    radial-gradient(circle at 100% 100%, #c7a2ff33, transparent 45%),
+    radial-gradient(#ff8fc818 1.4px, transparent 1.6px) 0 0 / 20px 20px,
+    #170d1d !important;
+}
+body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
+  background:
+    radial-gradient(circle at 8% 0%, #ff8fc855, transparent 40%),
+    radial-gradient(circle at 100% 100%, #c7a2ff44, transparent 45%),
+    radial-gradient(#ff5fae22 1.4px, transparent 1.6px) 0 0 / 20px 20px,
+    #ffe1ef !important;
+}
+/* petals drifting across the whole window, behind every card */
+body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: var(--uwu-window-petals);
+  background-size: var(--uwu-window-petals-size);
+  opacity: .55;
+}
+
+.monaco-workbench[class*="uwu-code-themes-uwu-"] {
+  background: transparent !important;
+  font-family: var(--k-font) !important;
+
+  /* UI text in the rounded font (the code editor keeps its own font) */
+  :is(.part, .quick-input-widget, .monaco-menu, .monaco-hover, .notifications-toasts, .monaco-dialog-box, .context-view) {
+    font-family: var(--k-font) !important;
+  }
+
+  ::selection { background: var(--k-glow); }
+
+  /* ─────────────── floating candy cards ─────────────── */
+  :is(.part.sidebar, .part.auxiliarybar, .part.panel, .part.editor > .content) {
+    background-color: var(--k-card) !important;
+    border-radius: var(--k-radius) !important;
+    box-shadow: var(--k-shadow) !important;
+    overflow: hidden !important;
+    animation: uwu-card-in .7s var(--k-bounce) both;
+  }
+  .part.sidebar { animation-delay: .05s; }
+  .part.editor > .content { animation-delay: .15s; }
+  .part.panel { animation-delay: .25s; }
+  :is(.part.sidebar, .part.auxiliarybar, .part.panel) { background-color: var(--k-panel) !important; }
+  .part.editor > .content { background: var(--k-card-solid) !important; }
+  :is(.part.sidebar, .part.editor > .content) {
+    box-shadow: 0 0 0 1.5px var(--k-line-strong), 0 10px 30px #0a000f55, 0 0 26px var(--k-glow) !important;
+  }
+  /* stickers: a bow on the editor card, a paw print on the side bar */
+  .part.editor > .content::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    background: var(--uwu-bow) center / contain no-repeat;
+    pointer-events: none;
+    z-index: 30;
+    transform: rotate(12deg);
+    animation: uwu-wiggle-slow 7s ease-in-out infinite;
+  }
+  .part.sidebar::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 46px;
+    height: 46px;
+    background: var(--uwu-paw) center / contain no-repeat;
+    opacity: .35;
+    transform: rotate(-16deg);
+    pointer-events: none;
+  }
+  .part.editor, .part.sidebar > .content, .split-view-view, .monaco-sash { background: transparent !important; }
+
+  /* sashes: a little pink seam that glows when you grab it */
+  .monaco-sash.hover::before, .monaco-sash.active::before {
+    background: linear-gradient(var(--k-pink), var(--k-lav)) !important;
+    border-radius: 99px;
+  }
+
+  /* ─────────────── title bar ─────────────── */
+  .part.titlebar {
+    background: linear-gradient(90deg, #ff8fc838, #c7a2ff30, #8ff5cf26, #ff8fc838) 0 0 / 300% 100% !important;
+    border-bottom: 0 !important;
+    animation: uwu-drift 18s linear infinite;
+  }
+  .part.titlebar .window-appicon { position: relative; overflow: visible !important; }
+  .part.titlebar .window-appicon::after {
+    content: "uwu IDE";
+    position: absolute;
+    left: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    font: 900 15px var(--k-font);
+    letter-spacing: .03em;
+    white-space: nowrap;
+    background: linear-gradient(90deg, var(--k-pink), var(--k-lav));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    pointer-events: none;
+  }
+  .window-appicon { background-image: none !important; }
+  .window-appicon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--uwu-logo) center / 22px no-repeat;
+    animation: uwu-wiggle-slow 6s ease-in-out infinite;
+  }
+  .command-center .command-center-center {
+    border-radius: 99px !important;
+    border: 1.5px solid var(--k-line-strong) !important;
+    background: var(--k-card) !important;
+    box-shadow: 0 2px 12px var(--k-glow);
+    transition: transform .25s var(--k-bounce), box-shadow .25s;
+  }
+  .command-center .command-center-center:hover { transform: scale(1.03); box-shadow: 0 4px 20px var(--k-glow); }
+  .command-center .search-label::before { content: "✧ "; color: var(--k-pink); }
+  .titlebar .window-title { font-weight: 800; letter-spacing: .02em; }
+
+  /* ─────────────── activity bar: a floating dock of custom icons ─────────────── */
+  .part.activitybar {
+    background: transparent !important;
+    .content {
+      background: linear-gradient(180deg, #ff8fc826, #c7a2ff1f 50%, #8ff5cf14), var(--k-card);
+      border: 1.5px solid var(--k-line);
+      border-radius: 22px;
+      margin: 8px 4px;
+      height: calc(100% - 16px) !important;
+      box-shadow: var(--k-shadow);
+    }
+    .action-item {
+      transition: transform .3s var(--k-bounce);
+      animation: uwu-pop .6s var(--k-bounce) both;
+    }
+    .action-item:nth-child(2) { animation-delay: .06s; }
+    .action-item:nth-child(3) { animation-delay: .12s; }
+    .action-item:nth-child(4) { animation-delay: .18s; }
+    .action-item:nth-child(5) { animation-delay: .24s; }
+    .action-item:hover { transform: translateY(-2px) scale(1.12) rotate(-6deg); }
+    .action-item .action-label {
+      border-radius: 14px !important;
+      color: var(--k-muted) !important;
+    }
+    .action-item.checked .action-label {
+      color: var(--k-ink) !important;
+      background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;
+      box-shadow: 0 4px 14px var(--k-glow);
+    }
+    .active-item-indicator::before { display: none !important; }
+    .badge-content {
+      background: var(--k-butter) !important;
+      color: #2a0c22 !important;
+      font-weight: 900;
+      animation: uwu-heartbeat 1.6s ease-in-out infinite;
+    }
+    /* swap the codicon glyphs for our own drawn icons */
+    .action-label:is(.codicon-explorer-view-icon, .codicon-search-view-icon, .codicon-source-control-view-icon,
+      .codicon-run-view-icon, .codicon-extensions-view-icon, .codicon-accounts-view-bar-icon,
+      .codicon-settings-view-bar-icon)::before {
+      content: "" !important;
+      width: 24px;
+      height: 24px;
+      background: currentColor;
+      -webkit-mask: var(--uwu-ic) center / 24px no-repeat;
+      mask: var(--uwu-ic) center / 24px no-repeat;
+    }
+    .codicon-explorer-view-icon { --uwu-ic: var(--uwu-icon-explorer); }
+    .codicon-search-view-icon { --uwu-ic: var(--uwu-icon-search); }
+    .codicon-source-control-view-icon { --uwu-ic: var(--uwu-icon-scm); }
+    .codicon-run-view-icon { --uwu-ic: var(--uwu-icon-run); }
+    .codicon-extensions-view-icon { --uwu-ic: var(--uwu-icon-extensions); }
+    .codicon-accounts-view-bar-icon { --uwu-ic: var(--uwu-icon-accounts); }
+    .codicon-settings-view-bar-icon { --uwu-ic: var(--uwu-icon-settings); }
+  }
+
+  /* ─────────────── side bar & lists ─────────────── */
+  .composite.title {
+    background: transparent !important;
+    h2 { font-weight: 900 !important; letter-spacing: .08em !important; color: var(--k-pink) !important; }
+    h2::before { content: "✿ "; }
+  }
+  .pane-header {
+    border-radius: 12px;
+    margin: 2px 6px;
+    background: transparent !important;
+    font-weight: 800 !important;
+    color: var(--k-lav) !important;
+    .title::before { content: "♡ "; color: var(--k-pink); }
+  }
+  .monaco-list-row {
+    border-radius: 12px;
+    transition: background .2s, transform .25s var(--k-bounce);
+  }
+  .monaco-list:not(.drop-target) .monaco-list-row:hover:not(.selected) {
+    background: linear-gradient(90deg, var(--k-glow), transparent) !important;
+    transform: translateX(3px);
+  }
+  .monaco-list .monaco-list-row.selected {
+    background: linear-gradient(90deg, #ff8fc855, #c7a2ff40) !important;
+    box-shadow: inset 0 0 0 1px var(--k-line-strong);
+  }
+  .monaco-list .monaco-list-row.focused { outline: none !important; }
+  .monaco-list-row:hover .monaco-icon-label::before { animation: uwu-wiggle .5s ease-in-out; }
+  .monaco-list-row.selected .monaco-icon-label::before { animation: uwu-hop 1.4s ease-in-out infinite; }
+  /* tree arrows become hearts */
+  .monaco-tl-twistie.collapsible::before {
+    content: "♥" !important;
+    font-family: var(--k-font) !important;
+    font-size: 11px;
+    color: var(--k-pink);
+    transform: none !important;
+    transition: transform .3s var(--k-bounce);
+  }
+  .monaco-tl-twistie.collapsible.collapsed::before { content: "♡" !important; color: var(--k-muted); }
+  .monaco-tl-twistie.collapsible:hover::before { transform: scale(1.3) !important; }
+  .monaco-tl-indent > .indent-guide { border-left: 1px dashed var(--k-line-strong) !important; }
+
+  /* ─────────────── editor tabs: candy pills ─────────────── */
+  .editor-group-container > .title {
+    background: transparent !important;
+    .tabs-container { padding: 0 8px !important; gap: 6px; align-items: center; }
+    .tab {
+      border-radius: 99px !important;
+      background: var(--k-raise) !important;
+      border: 0 !important;
+      height: 26px !important;
+      padding-left: 6px !important;
+      transition: transform .3s var(--k-bounce), background .2s;
+      animation: uwu-pop .5s var(--k-bounce) both;
+    }
+    .tab:hover { transform: translateY(-2px); }
+    .tab.active {
+      background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;
+      box-shadow: 0 4px 14px var(--k-glow);
+      .label-name, .monaco-icon-label::after, .tab-label { color: var(--k-ink) !important; font-weight: 800; }
+    }
+    .tab::after, .tab-fill, .tab-connected-edge, .tab-border-top-container, .tab-border-bottom-container { display: none !important; }
+    .tab .tab-actions { height: 26px !important; }
+    /* unsaved files get a beating heart instead of a dot */
+    .tab.dirty:not(:hover) .tab-actions .action-label::before {
+      content: "♥" !important;
+      font-family: var(--k-font) !important;
+      color: var(--k-hot);
+      display: inline-block;
+      animation: uwu-heartbeat 1.2s ease-in-out infinite;
+    }
+    .tab.active.dirty:not(:hover) .tab-actions .action-label::before { color: var(--k-ink); }
+  }
+  .breadcrumbs-control {
+    .monaco-breadcrumb-item { border-radius: 99px; padding: 0 4px; }
+    .monaco-breadcrumb-item:hover { background: var(--k-glow); }
+    .monaco-breadcrumb-item::before { content: "✿" !important; font-family: var(--k-font) !important; color: var(--k-pink) !important; font-size: 9px; }
+  }
+
+  /* ─────────────── the code editor ─────────────── */
+  .monaco-editor {
+    --vscode-editor-background: transparent;
+    .cursor {
+      background: linear-gradient(var(--k-pink), var(--k-lav)) !important;
+      border-color: var(--k-pink) !important;
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--k-pink), 0 0 2px var(--k-pink);
+    }
+    .current-line, .current-line-exact {
+      border: 0 !important;
+      background: linear-gradient(90deg, #ff8fc81f, transparent 60%) !important;
+      border-radius: 10px;
+    }
+    .line-numbers.active-line-number { color: var(--k-pink) !important; font-weight: 800; }
+    .line-numbers.active-line-number::after {
+      content: "♡";
+      position: absolute;
+      left: 2px;
+      color: var(--k-pink);
+      font-family: var(--k-font);
+      font-size: 10px;
+      animation: uwu-heartbeat 1.6s ease-in-out infinite;
+    }
+    .selected-text { border-radius: 6px; }
+    .bracket-match {
+      border-radius: 6px;
+      box-shadow: 0 0 8px var(--k-glow);
+    }
+    .codicon-folding-expanded::before, .codicon-folding-manual-expanded::before {
+      content: "♥" !important; font-family: var(--k-font) !important; font-size: 11px; color: var(--k-pink);
+    }
+    .codicon-folding-collapsed::before, .codicon-folding-manual-collapsed::before {
+      content: "♡" !important; font-family: var(--k-font) !important; font-size: 11px; color: var(--k-muted);
+    }
+    .sticky-widget { border-radius: 0 0 14px 14px; box-shadow: 0 6px 16px var(--k-glow) !important; }
+  }
+  /* empty editor: the mascot instead of the VS Code logo */
+  .editor-group-watermark {
+    .letterpress {
+      background-image: var(--uwu-watermark) !important;
+      background-size: contain !important;
+      aspect-ratio: 1 / 1 !important;
+      max-width: 320px !important;
+      animation: uwu-float 4s ease-in-out infinite;
+    }
+    .letterpress::after {
+      content: "uwu IDE ✿ let's make something cute today";
+      display: block;
+      position: relative;
+      top: 102%;
+      text-align: center;
+      font: 800 15px var(--k-font);
+      color: var(--k-pink);
+      white-space: nowrap;
+    }
+    .shortcuts { min-width: 340px; }
+    .shortcuts dl { border-radius: 12px; }
+    .shortcuts dt { color: var(--k-lav) !important; font-weight: 700; }
+  }
+
+  /* ─────────────── widgets, menus, hovers ─────────────── */
+  :is(.monaco-menu-container, .monaco-hover, .suggest-widget, .parameter-hints-widget, .find-widget, .rename-box, .monaco-editor .zone-widget) {
+    border-radius: 16px !important;
+    border: 1.5px solid var(--k-line-strong) !important;
+    box-shadow: 0 12px 34px #0a000f55, 0 0 0 4px #ff8fc812 !important;
+    overflow: hidden;
+  }
+  :is(.monaco-menu-container, .monaco-hover, .suggest-widget) { animation: uwu-pop .3s var(--k-bounce) both; }
+  .monaco-menu .action-item {
+    border-radius: 10px;
+    .action-label.separator { border-bottom-style: dashed !important; }
+  }
+  .monaco-menu .monaco-action-bar.vertical .action-item.focused > .action-menu-item,
+  .monaco-menu .monaco-action-bar.vertical .action-menu-item:hover {
+    background: linear-gradient(90deg, var(--k-pink), var(--k-lav)) !important;
+    color: var(--k-ink) !important;
+    border-radius: 10px;
+  }
+  .find-widget { border-radius: 0 0 16px 16px !important; }
+  .suggest-widget .monaco-list-row.focused {
+    background: linear-gradient(90deg, #ff8fc855, #c7a2ff40) !important;
+  }
+
+  /* ─────────────── command palette ─────────────── */
+  .quick-input-widget {
+    border-radius: 24px !important;
+    overflow: hidden;
+    padding-top: 8px;
+    border: 2.5px solid transparent !important;
+    background:
+      linear-gradient(var(--k-card-solid), var(--k-card-solid)) padding-box,
+      conic-gradient(from var(--uwu-spin), var(--k-pink), var(--k-lav), var(--k-sky), var(--k-mint), var(--k-butter), var(--k-pink)) border-box !important;
+    box-shadow: 0 20px 60px #0a000f88, 0 0 40px var(--k-glow) !important;
+    animation: uwu-pop .35s var(--k-bounce) both, uwu-spin 5s linear infinite;
+  }
+  .quick-input-widget::before {
+    content: "✧ what shall we do today? ✧";
+    display: block;
+    width: 100%;
+    text-align: center;
+    font: 900 12px var(--k-font);
+    letter-spacing: .1em;
+    color: var(--k-pink);
+    padding: 2px 0 4px;
+  }
+  .quick-input-widget .monaco-inputbox { border-radius: 99px !important; }
+  .quick-input-list .monaco-list-row { margin: 0 6px; }
+
+  /* ─────────────── buttons & inputs ─────────────── */
+  .monaco-button:not(.monaco-text-button-with-description):not(.secondary) {
+    border-radius: 99px !important;
+    background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    border: 0 !important;
+    box-shadow: 0 4px 14px var(--k-glow);
+    transition: transform .25s var(--k-bounce);
+  }
+  .monaco-button:hover { transform: translateY(-1px) scale(1.04); }
+  .monaco-button:active { transform: scale(.95); }
+  .monaco-button.secondary { border-radius: 99px !important; }
+  .monaco-inputbox {
+    border-radius: 12px !important;
+    transition: box-shadow .2s;
+  }
+  .monaco-inputbox.synthetic-focus, .monaco-inputbox:focus-within {
+    box-shadow: 0 0 0 2px var(--k-pink), 0 0 16px var(--k-glow) !important;
+    outline: none !important;
+  }
+  .monaco-checkbox, .monaco-custom-toggle { border-radius: 6px !important; }
+  .monaco-scrollable-element > .scrollbar > .slider {
+    border-radius: 99px !important;
+    background: linear-gradient(var(--k-pink), var(--k-lav)) !important;
+    opacity: .55;
+  }
+  .monaco-scrollable-element > .scrollbar > .slider:hover { opacity: .85; }
+  .monaco-scrollable-element > .shadow { box-shadow: none !important; }
+
+  /* ─────────────── notifications & dialogs ─────────────── */
+  .notifications-toasts .notification-toast, .notifications-center {
+    border-radius: 22px !important;
+    overflow: hidden;
+    border: 1.5px solid var(--k-line-strong) !important;
+    box-shadow: 0 14px 40px #0a000f66, 0 0 30px var(--k-glow) !important;
+  }
+  .notifications-toasts .notification-toast-container { animation: uwu-slide-up .5s var(--k-bounce) both; }
+  .notification-list-item-icon::before { color: var(--k-pink) !important; }
+  .monaco-dialog-box {
+    border-radius: 26px !important;
+    border: 2px solid var(--k-line-strong) !important;
+    animation: uwu-pop .4s var(--k-bounce) both;
+    .dialog-message-row::before {
+      content: "";
+      flex: 0 0 64px;
+      height: 64px;
+      background: var(--uwu-mascot) center / contain no-repeat;
+      margin-right: 12px;
+    }
+    .dialog-icon { display: none !important; }
+  }
+
+  /* ─────────────── status bar: a floating pill ─────────────── */
+  .part.statusbar {
+    background: transparent !important;
+    border: 0 !important;
+    > .left-items, > .right-items { gap: 4px; }
+    .statusbar-item {
+      border-radius: 99px;
+      transition: transform .25s var(--k-bounce);
+    }
+    .statusbar-item:hover { transform: translateY(-2px); }
+    .statusbar-item a:hover { background: var(--k-glow) !important; border-radius: 99px; }
+    /* the mascot chip */
+    [id^="folkedevvy.uwu-code"] {
+      background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;
+      border-radius: 99px;
+      padding: 0 8px !important;
+      a { color: var(--k-ink) !important; font-weight: 900; }
+    }
+  }
+  .part.statusbar::before {
+    content: "";
+    position: absolute;
+    inset: 2px 6px 3px;
+    border-radius: 99px;
+    background: var(--k-card);
+    box-shadow: var(--k-shadow);
+    z-index: -1;
+  }
+  /* hidden channel used by the extension to pass settings to the script */
+  [id$="uwu.bridge"] { display: none !important; }
+
+  /* ─────────────── panel & terminal ─────────────── */
+  .part.panel {
+    .composite.title .action-label { border-radius: 99px !important; }
+    .composite.title .action-item.checked .action-label {
+      background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;
+      color: var(--k-ink) !important;
+    }
+    .active-item-indicator::before { display: none !important; }
+  }
+}
+
+/* ═════════════════════════════ script-made effects ═════════════════════════════
+   (elements created by uwu-kawaii.js; they live directly under <body>) */
+.uwu-fx {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100000;
+  font-family: "uwu Nunito", system-ui, sans-serif;
+  will-change: transform, opacity;
+}
+.uwu-particle {
+  left: 0;
+  top: 0;
+  font-weight: 900;
+  text-shadow: 0 0 6px currentColor;
+  animation: uwu-particle var(--d, .8s) cubic-bezier(.2, .8, .3, 1) forwards;
+}
+.uwu-confetti {
+  top: -20px;
+  width: 9px;
+  height: 14px;
+  border-radius: 3px;
+  animation: uwu-confetti var(--d, 2.4s) linear forwards;
+}
+.uwu-splash {
+  inset: 0;
+  z-index: 100001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, #ff8fc855, transparent 50%),
+    radial-gradient(circle at 70% 80%, #c7a2ff55, transparent 50%),
+    #1d1124;
+  transition: opacity .6s, transform .6s;
+}
+.uwu-splash.light { background: radial-gradient(circle at 30% 20%, #ff8fc866, transparent 50%), radial-gradient(circle at 70% 80%, #c7a2ff55, transparent 50%), #fff2f8; }
+.uwu-splash.out { opacity: 0; transform: scale(1.06); }
+.uwu-splash-logo {
+  width: 128px;
+  height: 128px;
+  background: var(--uwu-logo) center / contain no-repeat;
+  filter: drop-shadow(0 10px 30px #ff8fc888);
+  animation: uwu-boot-logo 1.2s var(--k-bounce, cubic-bezier(.34, 1.56, .64, 1)) both, uwu-float 3s ease-in-out 1.2s infinite;
+}
+.uwu-splash-title {
+  font: 900 40px "uwu Nunito", system-ui, sans-serif;
+  letter-spacing: .04em;
+  display: flex;
+  gap: 2px;
+}
+.uwu-splash-title span {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff8fc8, #c7a2ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: uwu-letter .8s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+.uwu-splash-sub { font: 700 14px "uwu Nunito", system-ui, sans-serif; color: #c79dbb; letter-spacing: .12em; }
+.uwu-splash-dots span {
+  display: inline-block;
+  color: #ff8fc8;
+  font-size: 18px;
+  margin: 0 4px;
+  animation: uwu-hop 1s ease-in-out infinite;
+}
+.uwu-splash-dots span:nth-child(2) { animation-delay: .15s; color: #c7a2ff; }
+.uwu-splash-dots span:nth-child(3) { animation-delay: .3s; color: #8ff5cf; }
+
+.uwu-mascot {
+  right: 26px;
+  bottom: 40px;
+  width: 74px;
+  height: 74px;
+  pointer-events: auto;
+  cursor: pointer;
+  background: var(--uwu-mascot) center / contain no-repeat;
+  filter: drop-shadow(0 6px 14px #ff8fc866);
+  animation: uwu-float 3.2s ease-in-out infinite;
+  transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+.uwu-mascot:hover { transform: scale(1.12) rotate(-6deg); }
+.uwu-mascot.jump { animation: uwu-jump .7s cubic-bezier(.34, 1.56, .64, 1); }
+.uwu-mascot.sad { animation: uwu-sad 2.4s ease-in-out infinite; filter: drop-shadow(0 6px 14px #9fd8ff66) saturate(.75); }
+.uwu-bubble {
+  right: 92px;
+  bottom: 96px;
+  max-width: 230px;
+  padding: 8px 14px;
+  border-radius: 18px 18px 4px 18px;
+  background: linear-gradient(135deg, #ff8fc8, #c7a2ff);
+  color: #2a0c22;
+  font: 800 13px "uwu Nunito", system-ui, sans-serif;
+  box-shadow: 0 8px 24px #ff8fc855;
+  opacity: 0;
+  transform: translateY(8px) scale(.9);
+  transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1);
+}
+.uwu-bubble.show { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .monaco-workbench[class*="uwu-code-themes-uwu-"] *, .uwu-fx, body::before { animation: none !important; transition: none !important; }
+}
+
+/* ═════════════════════════════ keyframes ═════════════════════════════ */
+@keyframes uwu-card-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes uwu-pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes uwu-slide-up { from { opacity: 0; transform: translateY(30px) scale(.95); } to { opacity: 1; transform: none; } }
+@keyframes uwu-spin { to { --uwu-spin: 360deg; } }
+@keyframes uwu-heartbeat { 0%, 40%, 100% { transform: scale(1); } 12% { transform: scale(1.3); } 24% { transform: scale(.95); } 32% { transform: scale(1.15); } }
+@keyframes uwu-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes uwu-wiggle-slow { 0%, 86%, 100% { transform: rotate(0); } 90% { transform: rotate(-14deg); } 95% { transform: rotate(10deg); } }
+@keyframes uwu-particle {
+  0% { opacity: 1; transform: translate(var(--x0), var(--y0)) scale(.4) rotate(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(var(--x0) + var(--dx)), calc(var(--y0) + var(--dy))) scale(var(--s, 1)) rotate(var(--r, 90deg)); }
+}
+@keyframes uwu-confetti {
+  0% { transform: translate(var(--x0), -20px) rotate(0); opacity: 1; }
+  100% { transform: translate(calc(var(--x0) + var(--dx)), 105vh) rotate(var(--r, 720deg)); opacity: .9; }
+}
+@keyframes uwu-boot-logo { 0% { opacity: 0; transform: scale(.3) rotate(-40deg); } 100% { opacity: 1; transform: none; } }
+@keyframes uwu-letter { 0% { opacity: 0; transform: translateY(30px) scale(.5); } 100% { opacity: 1; transform: none; } }
+@keyframes uwu-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
+@keyframes uwu-jump { 0% { transform: none; } 35% { transform: translateY(-36px) rotate(-10deg) scale(1.1); } 70% { transform: translateY(0) scale(1.08, .92); } 100% { transform: none; } }
+@keyframes uwu-sad { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(3px); } }
+@keyframes uwu-drift { to { background-position: 300% 0; } }
+@keyframes uwu-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg) scale(1.15); } 75% { transform: rotate(12deg) scale(1.15); } }

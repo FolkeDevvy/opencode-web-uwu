@@ -7,7 +7,9 @@
 // click-through layer. It is unofficial, so every effect can be switched off.
 
 const vscode = require('vscode');
+const path = require('path');
 const petalLayers = require('./petals');
+const kawaii = require('./kawaii-workbench');
 
 const KAOMOJI = {
   happy: ['(｡♥‿♥｡)', '(｡♥‿♥｡)', '(｡♥‿♥｡)', '(｡-‿-｡)'],
@@ -25,7 +27,8 @@ function activate(context) {
   const hearts = new GutterHearts(context);
   const kaomoji = new ErrorKaomoji();
   const mascot = new Mascot();
-  context.subscriptions.push(petals, hearts, kaomoji, mascot);
+  const bridge = new Bridge();
+  context.subscriptions.push(petals, hearts, kaomoji, mascot, bridge);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('uwu.togglePetals', () => {
@@ -37,6 +40,8 @@ function activate(context) {
       mascot.celebrate();
     }),
     vscode.commands.registerCommand('uwu.clearHearts', () => hearts.clearAll()),
+    vscode.commands.registerCommand('uwu.enableKawaiiWorkbench', () => setKawaii(context, true)),
+    vscode.commands.registerCommand('uwu.disableKawaiiWorkbench', () => setKawaii(context, false)),
     vscode.workspace.onDidSaveTextDocument((doc) => {
       hearts.clear(doc);
       const editor = vscode.window.activeTextEditor;
@@ -49,8 +54,153 @@ function activate(context) {
       hearts.refreshAll();
       kaomoji.refreshAll();
       mascot.refresh();
+      bridge.refresh();
     }),
   );
+  checkKawaiiAfterUpdate(context);
+}
+
+// ─────────────────────────────── Kawaii Workbench ───────────────────────────────
+
+// Editor settings that make the kawaii look complete. They're only applied
+// where you haven't set your own value, and are put back on disable.
+const KAWAII_SETTINGS = {
+  'workbench.iconTheme': 'uwu-cuties',
+  'window.title': '${dirty}${activeEditorShort}${separator}${rootName}${separator}✿ uwu IDE',
+  'window.commandCenter': true,
+  'window.menuBarVisibility': 'compact',
+  'workbench.layoutControl.enabled': false,
+  'workbench.startupEditor': 'none',
+  'workbench.list.smoothScrolling': true,
+  'workbench.tree.indent': 14,
+  'workbench.tree.renderIndentGuides': 'always',
+  'editor.cursorBlinking': 'expand',
+  'editor.cursorSmoothCaretAnimation': 'on',
+  'editor.cursorWidth': 3,
+  'editor.smoothScrolling': true,
+  'editor.roundedSelection': true,
+  'editor.minimap.enabled': false,
+  'editor.renderLineHighlight': 'all',
+  'editor.bracketPairColorization.enabled': true,
+  'editor.guides.bracketPairs': 'active',
+  'editor.padding.top': 10,
+  'terminal.integrated.smoothScrolling': true,
+};
+
+const ENABLED_KEY = 'uwu.kawaii.enabled';
+const CHANGED_KEY = 'uwu.kawaii.changedSettings';
+
+/**
+ * @param {vscode.ExtensionContext} context
+ * @param {boolean} enable
+ */
+async function setKawaii(context, enable) {
+  const appRoot = vscode.env.appRoot;
+  if (appRoot.startsWith('/snap/')) {
+    vscode.window.showErrorMessage(
+      "uwu: the Snap version of VS Code is read-only, so the Kawaii Workbench can't be installed. The .deb/.rpm or tarball versions work. (The editor effects still work everywhere ♡)",
+    );
+    return;
+  }
+  if (enable) {
+    const ok = await vscode.window.showWarningMessage(
+      'Turn VS Code into uwu IDE? ✿',
+      {
+        modal: true,
+        detail:
+          "This restyles the whole window by adding uwu-code's stylesheet and script to VS Code's own files (backups are kept, and 'uwu: Disable Kawaii Workbench' undoes it). After a VS Code update you'll be offered to re-apply it.",
+      },
+      'Make it kawaii',
+    );
+    if (ok !== 'Make it kawaii') return;
+  }
+  let p;
+  try {
+    p = kawaii.plan(appRoot, path.join(context.extensionPath, 'workbench'), enable);
+  } catch (err) {
+    vscode.window.showErrorMessage(`uwu: ${err.message}`);
+    return;
+  }
+  let needsSudo = false;
+  try {
+    kawaii.apply(p);
+  } catch (err) {
+    if (!['EACCES', 'EPERM', 'EROFS'].includes(err.code)) {
+      vscode.window.showErrorMessage(`uwu: couldn't update VS Code's files: ${err.message}`);
+      return;
+    }
+    needsSudo = true;
+  }
+  await context.globalState.update(ENABLED_KEY, enable);
+  await applySettings(context, enable);
+  if (needsSudo) {
+    const script = kawaii.stage(p, path.join(context.globalStorageUri.fsPath, 'kawaii-staging'));
+    const cmd = `sudo sh '${script}'`;
+    const pick = await vscode.window.showInformationMessage(
+      `uwu: VS Code is installed system-wide, so this last step needs your password. Run this in a terminal, then reload: ${cmd}`,
+      'Run in terminal',
+      'Copy command',
+    );
+    if (pick === 'Copy command') await vscode.env.clipboard.writeText(cmd);
+    if (pick === 'Run in terminal') {
+      const term = vscode.window.createTerminal('uwu IDE ✿');
+      term.show();
+      term.sendText(cmd);
+    }
+    return;
+  }
+  const again = await vscode.window.showInformationMessage(
+    enable ? 'uwu IDE is ready ✿ reload to see it!' : 'Kawaii Workbench removed. Reload to finish.',
+    'Reload now',
+  );
+  if (again === 'Reload now') vscode.commands.executeCommand('workbench.action.reloadWindow');
+}
+
+/**
+ * @param {vscode.ExtensionContext} context
+ * @param {boolean} enable
+ */
+async function applySettings(context, enable) {
+  const conf = vscode.workspace.getConfiguration();
+  const G = vscode.ConfigurationTarget.Global;
+  if (enable) {
+    /** @type {Record<string, unknown>} key -> previous value (undefined = unset) */
+    const changed = context.globalState.get(CHANGED_KEY, {});
+    const theme = conf.inspect('workbench.colorTheme');
+    const current = theme && (theme.globalValue || theme.defaultValue);
+    if (!String(current).startsWith('uwu ')) {
+      if (!('workbench.colorTheme' in changed)) changed['workbench.colorTheme'] = theme && theme.globalValue;
+      await conf.update('workbench.colorTheme', 'uwu strawberry-milk night', G);
+    }
+    for (const [key, value] of Object.entries(KAWAII_SETTINGS)) {
+      const info = conf.inspect(key);
+      const mine = key in changed;
+      if (info && info.globalValue !== undefined && !mine && key !== 'workbench.iconTheme') continue;
+      if (!mine) changed[key] = info && info.globalValue;
+      await conf.update(key, value, G);
+    }
+    await context.globalState.update(CHANGED_KEY, changed);
+  } else {
+    const changed = context.globalState.get(CHANGED_KEY, {});
+    for (const [key, previous] of Object.entries(changed)) await conf.update(key, previous, G);
+    await context.globalState.update(CHANGED_KEY, undefined);
+  }
+}
+
+/** After a VS Code update the patch is gone; offer to put it back. */
+async function checkKawaiiAfterUpdate(context) {
+  if (!context.globalState.get(ENABLED_KEY)) return;
+  try {
+    if (kawaii.isPatched(vscode.env.appRoot)) return;
+  } catch {
+    return;
+  }
+  const pick = await vscode.window.showInformationMessage(
+    'uwu: VS Code was updated, so the Kawaii Workbench needs to be re-applied ✿',
+    'Re-apply',
+    'Not now',
+  );
+  if (pick === 'Re-apply') setKawaii(context, true);
 }
 
 // ─────────────────────────────── sakura petals ───────────────────────────────
@@ -419,6 +569,29 @@ class Mascot {
     clearInterval(this.timer);
     this.item.dispose();
     this.disposables.forEach((d) => d.dispose());
+  }
+}
+
+// ─────────────────────────────── settings bridge ───────────────────────────────
+
+// The Kawaii Workbench script runs in the window, where it can't read settings.
+// This hidden status-bar item carries them over (the stylesheet hides it).
+class Bridge {
+  constructor() {
+    this.item = vscode.window.createStatusBarItem('uwu.bridge', vscode.StatusBarAlignment.Left, -10000);
+    this.item.name = 'uwu-code settings bridge';
+    this.refresh();
+    this.item.show();
+  }
+
+  refresh() {
+    const c = vscode.workspace.getConfiguration('uwu.workbench');
+    const flag = (k) => (c.get(k) ? 1 : 0);
+    this.item.text = `uwu:splash=${flag('splash')};clicks=${flag('clickBursts')};typing=${flag('typingSparkles')};mascot=${flag('mascot')};confetti=${flag('confetti')}`;
+  }
+
+  dispose() {
+    this.item.dispose();
   }
 }
 

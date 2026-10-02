@@ -1,8 +1,8 @@
 {
   "name": "uwu-code",
   "displayName": "uwu-code",
-  "description": "Super duper kawaii VS Code: pastel themes, sakura petals behind your code, sparkle bursts on save, gutter hearts, error kaomoji and a status-bar mascot ♡",
-  "version": "0.1.1",
+  "description": "Turns VS Code into a kawaii IDE: pastel themes and file icons, sakura petals, a full window makeover with splash screen, mascot, sparkles and confetti ♡",
+  "version": "0.2.0",
   "publisher": "folkedevvy",
   "icon": "media/icon.png",
   "repository": {
@@ -55,6 +55,16 @@
       {
         "command": "uwu.clearHearts",
         "title": "Clear Gutter Hearts",
+        "category": "uwu"
+      },
+      {
+        "command": "uwu.enableKawaiiWorkbench",
+        "title": "Enable Kawaii Workbench (turn VS Code into uwu IDE) ✿",
+        "category": "uwu"
+      },
+      {
+        "command": "uwu.disableKawaiiWorkbench",
+        "title": "Disable Kawaii Workbench",
         "category": "uwu"
       }
     ],
@@ -120,6 +130,31 @@
           "type": "boolean",
           "default": true,
           "description": "Show a kaomoji mascot in the status bar that reacts to errors and saves."
+        },
+        "uwu.workbench.splash": {
+          "type": "boolean",
+          "default": true,
+          "description": "Kawaii Workbench: show the uwu IDE splash screen at startup."
+        },
+        "uwu.workbench.clickBursts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Kawaii Workbench: little heart bursts wherever you click."
+        },
+        "uwu.workbench.typingSparkles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Kawaii Workbench: sparkles pop out of the cursor while you type."
+        },
+        "uwu.workbench.mascot": {
+          "type": "boolean",
+          "default": true,
+          "description": "Kawaii Workbench: the floating mascot that reacts to saves and errors (click it for pats)."
+        },
+        "uwu.workbench.confetti": {
+          "type": "boolean",
+          "default": true,
+          "description": "Kawaii Workbench: confetti rain when you save."
         }
       }
     },
@@ -133,6 +168,13 @@
           "highContrast": "#ff8aa5",
           "highContrastLight": "#e0325e"
         }
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "uwu-cuties",
+        "label": "uwu cuties",
+        "path": "./fileicons/uwu-icon-theme.json"
       }
     ]
   }
