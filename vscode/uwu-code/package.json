@@ -1,0 +1,126 @@
+{
+  "name": "uwu-code",
+  "displayName": "uwu-code",
+  "description": "Super duper kawaii VS Code: pastel themes, sakura petals behind your code, sparkle bursts on save, gutter hearts, error kaomoji and a status-bar mascot ♡",
+  "version": "0.1.0",
+  "publisher": "folkedevvy",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FolkeDevvy/opencode-web-uwu"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "kawaii",
+    "uwu",
+    "sakura",
+    "pastel",
+    "pink",
+    "theme"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "themes": [
+      {
+        "label": "uwu strawberry-milk night",
+        "uiTheme": "vs-dark",
+        "path": "./themes/uwu-dark-color-theme.json"
+      },
+      {
+        "label": "uwu sakura cream day",
+        "uiTheme": "vs",
+        "path": "./themes/uwu-light-color-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "uwu.togglePetals",
+        "title": "Toggle Sakura Petals",
+        "category": "uwu"
+      },
+      {
+        "command": "uwu.sparkle",
+        "title": "Sparkle! ✧",
+        "category": "uwu"
+      },
+      {
+        "command": "uwu.clearHearts",
+        "title": "Clear Gutter Hearts",
+        "category": "uwu"
+      }
+    ],
+    "configuration": {
+      "title": "uwu-code",
+      "properties": {
+        "uwu.petals.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show sakura petals drifting behind the code in the editor."
+        },
+        "uwu.petals.opacity": {
+          "type": "number",
+          "default": 0.55,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "How visible the petals are (0 = invisible, 1 = full)."
+        },
+        "uwu.petals.layers": {
+          "type": "string",
+          "enum": [
+            "all",
+            "noFront",
+            "far"
+          ],
+          "enumDescriptions": [
+            "All three layers, including big soft petals up front (heavier: costs some frame rate on slower machines)",
+            "Near and far petals (default, smooth everywhere)",
+            "Only the small, slow far-away petals (subtlest and lightest)"
+          ],
+          "default": "noFront",
+          "description": "Which petal layers to draw."
+        },
+        "uwu.sparkleOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Burst hearts and sparkles at the cursor when you save."
+        },
+        "uwu.gutterHearts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a little heart in the gutter on lines you changed since the last save."
+        },
+        "uwu.errorKaomoji": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a sad kaomoji at the end of lines with errors."
+        },
+        "uwu.mascot": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a kaomoji mascot in the status bar that reacts to errors and saves."
+        }
+      }
+    },
+    "colors": [
+      {
+        "id": "uwu.kaomojiForeground",
+        "description": "Colour of the error kaomoji shown after lines with errors.",
+        "defaults": {
+          "dark": "#ff8aa5cc",
+          "light": "#e0325ecc",
+          "highContrast": "#ff8aa5",
+          "highContrastLight": "#e0325e"
+        }
+      }
+    ]
+  }
+}

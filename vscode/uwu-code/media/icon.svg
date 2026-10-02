@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#b98bff"/></linearGradient>
+    <radialGradient id="p" cx=".5" cy=".75" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffd1e6"/></radialGradient>
+    <path id="petal" d="M0 -22 C5 -30 17 -33 20 -22 C26 -8 18 14 0 34 C-18 14 -26 -8 -20 -22 C-17 -33 -5 -30 0 -22 Z" transform="translate(0 -44)"/>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"/>
+  <circle cx="200" cy="58" r="5" fill="#fff" opacity=".8"/>
+  <path d="M60 196 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 z" fill="#fff" opacity=".85"/>
+  <g transform="translate(128 132) rotate(-12)">
+    <use href="#petal" fill="url(#p)" transform="rotate(0)"/>
+    <use href="#petal" fill="url(#p)" transform="rotate(72)"/>
+    <use href="#petal" fill="url(#p)" transform="rotate(144)"/>
+    <use href="#petal" fill="url(#p)" transform="rotate(216)"/>
+    <use href="#petal" fill="url(#p)" transform="rotate(288)"/>
+    <circle r="15" fill="#ff6fb5"/>
+    <g fill="#ffe59a"><circle cx="0" cy="-8" r="3"/><circle cx="7.6" cy="-2.5" r="3"/><circle cx="4.7" cy="6.5" r="3"/><circle cx="-4.7" cy="6.5" r="3"/><circle cx="-7.6" cy="-2.5" r="3"/></g>
+  </g>
+</svg>
