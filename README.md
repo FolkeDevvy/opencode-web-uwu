@@ -19,7 +19,7 @@ as a Firefox `userContent.css`. No extensions needed.
 - Gradient chat bubbles, an "opencode-chan" badge on replies, and ♡ list bullets
 - Pastel syntax highlighting and "window dots" on code blocks
 - Glowing rounded composer, gradient send/connect buttons, and bouncy hover effects
-- **Falling sakura petals in the wind 🌸.** There are two layers: a far one with small, slow petals and a near one with bigger petals. Each petal falls, sways, spins and flips, and the wind blows them sideways in gusts. The petals fall *behind* the chat cards, so text stays readable.
+- **Falling sakura petals in the wind 🌸.** There are three layers: a far one with small, slow petals, a near one with bigger petals, and a front one with a few big, blurry petals for depth. Each petal falls, sways, spins and flips, and the wind blows them sideways in gusts. The petals fall *behind* the chat cards, so text stays readable.
 - **Fun animations:**
   - new messages pop in
   - a rainbow border spins around the composer while you type
@@ -68,6 +68,9 @@ There are two knobs near the top of `userContent.css`:
 To change the number of petals, their size, colours or fall speed, edit `LAYERS` / `PINKS` in
 [`tools/petals.py`](tools/petals.py) and run `python3 tools/petals.py`. It regenerates
 the petal block inside `userContent.css`.
+
+To drop just the blurry front petals, remove the `"--uwu-petals-front"` entry from `LAYERS`
+and remove `var(--uwu-petals-front),` from the petal `background-image` line, then re-run the script.
 
 ## Fonts offline?
 

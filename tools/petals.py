@@ -25,7 +25,7 @@ PETAL = (
 VEIN = "M0 -5 C.6 0 .4 5 0 9"
 
 
-def tile(seed, w, h, count, scale, period, colors, opacity):
+def tile(seed, w, h, count, scale, period, colors, opacity, blur=0):
     rnd = random.Random(seed)
     defs = [
         f'<radialGradient id="g{i}" cx=".5" cy=".7" r=".8">'
@@ -33,6 +33,11 @@ def tile(seed, w, h, count, scale, period, colors, opacity):
         "</radialGradient>"
         for i, (inner, outer) in enumerate(colors)
     ]
+    if blur:
+        defs.append(
+            f'<filter id="b" x="-60%" y="-60%" width="220%" height="220%">'
+            f'<feGaussianBlur stdDeviation="{blur}"/></filter>'
+        )
     defs.append(
         f'<g id="p"><path d="{PETAL}"/>'
         f'<path d="{VEIN}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".9" stroke-linecap="round"/></g>'
@@ -41,7 +46,8 @@ def tile(seed, w, h, count, scale, period, colors, opacity):
     for n in range(count):
         # spread petals evenly across the tile, with jitter
         x = (n + 0.5) * w / count + rnd.uniform(-w / count / 3, w / count / 3)
-        x = max(30, min(w - 30, x))
+        margin = 12 * scale[1] + 26  # keep big petals from being clipped at tile seams
+        x = max(margin, min(w - margin, x))
         sway = rnd.uniform(14, 26)
         dur = rnd.uniform(*period)
         begin = -rnd.uniform(0, dur)
@@ -56,8 +62,9 @@ def tile(seed, w, h, count, scale, period, colors, opacity):
             f"M{x:.1f} 0 C{x + sway:.1f} {q * .5:.1f} {x + sway:.1f} {q * 1.5:.1f} {x:.1f} {q * 2:.1f} "
             f"S{x - sway:.1f} {q * 3.5:.1f} {x:.1f} {h}"
         )
+        filt = ' filter="url(#b)"' if blur else ""
         body = (
-            f'<g transform="scale({s:.2f})">'
+            f'<g transform="scale({s:.2f})"{filt}>'
             f'<g><animateTransform attributeName="transform" type="rotate" from="0" to="{spin}" '
             f'dur="{spin_dur:.2f}s" begin="{begin:.2f}s" repeatCount="indefinite"/>'
             f'<g><animateTransform attributeName="transform" type="scale" values="1 1;1 .25;1 1" '
@@ -78,6 +85,9 @@ def tile(seed, w, h, count, scale, period, colors, opacity):
 PINKS = [("#ffe6f1", "#ff8fc2"), ("#ffd4e7", "#f9679f"), ("#fff0f6", "#ffa9cf"), ("#ffc9e0", "#ef5d97")]
 
 LAYERS = {
+    # front: a few big, soft, out-of-focus petals drifting closest to the "camera"
+    # (still behind the UI; it is just the top background layer)
+    "--uwu-petals-front": tile(99, 1400, 1100, 4, (3.4, 4.6), (9, 12), PINKS, .62, blur=1.1),
     # far: small, pale, slow
     "--uwu-petals-far": tile(7, 610, 700, 10, (.7, 1.0), (16, 24), PINKS, .6),
     # near: bigger, brighter, a bit quicker
