@@ -55,15 +55,27 @@ function activate(context) {
 
 // ─────────────────────────────── sakura petals ───────────────────────────────
 
+// How the petals work: one decoration's ::before becomes a single big layer
+// behind the text (click-through) that is attached to the *document*, like
+// wallpaper: it is anchored to a line near the middle of the view and shifted
+// up by that many line heights (CSS `lh`), so wherever it is anchored the
+// petals land on exactly the same spot in the document. Re-anchoring while you
+// scroll therefore never moves a single petal, and because the anchor sits half
+// a screen from either edge it can't scroll out of view (and vanish) before the
+// update arrives. The petal SVGs animate themselves (fall, sway, spin, wind).
+const SPAN = 120; // lines the layer reaches above and below its anchor
+
 class Petals {
   constructor() {
     this.type = undefined;
+    /** @type {WeakMap<vscode.TextEditor, number>} last anchor per editor */
+    this.anchors = new WeakMap();
     this.disposables = [
       vscode.window.onDidChangeVisibleTextEditors(() => this.applyAll()),
       vscode.window.onDidChangeTextEditorVisibleRanges((e) => this.apply(e.textEditor)),
       vscode.window.onDidChangeActiveColorTheme(() => this.rebuild()),
       vscode.workspace.onDidChangeTextDocument((e) => {
-        for (const ed of vscode.window.visibleTextEditors) if (ed.document === e.document) this.apply(ed);
+        for (const ed of vscode.window.visibleTextEditors) if (ed.document === e.document) this.apply(ed, true);
       }),
     ];
     this.rebuild();
@@ -72,6 +84,7 @@ class Petals {
   rebuild() {
     if (this.type) this.type.dispose();
     this.type = undefined;
+    this.anchors = new WeakMap();
     if (cfg().get('petals.enabled')) {
       const which = cfg().get('petals.layers');
       const layers = which === 'far' ? petalLayers.slice(2) : which === 'noFront' ? petalLayers.slice(1) : petalLayers;
@@ -79,29 +92,33 @@ class Petals {
       const kind = vscode.window.activeColorTheme.kind;
       const light = kind === vscode.ColorThemeKind.Light || kind === vscode.ColorThemeKind.HighContrastLight;
       const base = Math.max(0, Math.min(1, Number(cfg().get('petals.opacity')) || 0));
-      const opacity = light ? Math.min(1, base * 1.7) : base;
-      // Whole-line decorations are drawn in the editor's overlay layer, which
-      // sits *underneath* the text layer, so stretching this one over the whole
-      // editor puts the petals behind the code but above the editor background.
-      // It is anchored to the first visible line, and pointer-events: none keeps
-      // it click-through. The petal SVGs animate themselves (fall, sway, spin,
-      // wind), so moving the anchor while you scroll never restarts them.
-      const css = [
-        'transparent',
+      const opacity = light ? Math.min(1, base * 1.3) : base;
+      // "edges": keep the petals out of the code. Measured in text columns (ch),
+      // they're invisible over the first ~24 columns, fade in by ~48 and are at
+      // full strength past ~72, where lines usually end.
+      const mask =
+        cfg().get('petals.area') === 'everywhere'
+          ? 'none'
+          : 'linear-gradient(to right, transparent 0, transparent 24ch, rgba(0,0,0,.35) 48ch, black 72ch)';
+      // the heavy part lives once in the decoration type; each anchor only
+      // changes top / height / background-position (see apply)
+      const shared = [
+        'none',
         'position: absolute',
-        'top: -40px !important',
-        'left: 0 !important',
-        'width: 100vw !important',
-        'height: calc(100vh + 80px) !important',
+        'left: 0',
+        'width: 100vw',
+        'z-index: -1',
         'pointer-events: none',
         `opacity: ${opacity}`,
         `background-image: ${layers.map((l) => l.url).join(', ')}`,
         `background-size: ${layers.map((l) => `${l.width}px ${l.height}px`).join(', ')}`,
         'background-repeat: repeat',
+        `-webkit-mask-image: ${mask}`,
+        `mask-image: ${mask}`,
       ].join('; ');
+      this.layerCount = layers.length;
       this.type = vscode.window.createTextEditorDecorationType({
-        isWholeLine: true,
-        backgroundColor: css,
+        before: { contentText: '\u200b', textDecoration: shared },
         rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
       });
     }
@@ -109,14 +126,37 @@ class Petals {
   }
 
   applyAll() {
-    for (const ed of vscode.window.visibleTextEditors) this.apply(ed);
+    for (const ed of vscode.window.visibleTextEditors) this.apply(ed, true);
   }
 
-  /** @param {vscode.TextEditor} editor */
-  apply(editor) {
+  /**
+   * @param {vscode.TextEditor} editor
+   * @param {boolean} [force] re-apply even if the anchor didn't change
+   */
+  apply(editor, force) {
     if (!this.type || editor.document.uri.scheme === 'output') return;
-    const first = editor.visibleRanges[0] ? editor.visibleRanges[0].start.line : 0;
-    editor.setDecorations(this.type, [new vscode.Range(first, 0, first, 0)]);
+    const lineCount = editor.document.lineCount;
+    const vis = editor.visibleRanges;
+    const top = vis.length ? vis[0].start.line : 0;
+    const bottom = vis.length ? vis[vis.length - 1].end.line : 0;
+    const anchor = Math.min(lineCount - 1, Math.floor((top + bottom) / 2));
+    if (!force && this.anchors.get(editor) === anchor) return;
+    this.anchors.set(editor, anchor);
+    // the layer starts `above` lines over the anchor; its background is shifted
+    // by the line it starts on, which keeps every petal glued to the document
+    const above = Math.min(anchor, SPAN);
+    const start = anchor - above;
+    const pos = `0 calc(${-start} * 1lh)`;
+    const css = [
+      'none',
+      `top: calc(${-above} * 1lh)`,
+      // reach SPAN lines below the anchor, and past the end of a short file
+      `height: calc(${above + SPAN} * 1lh + 100vh)`,
+      `background-position: ${Array(this.layerCount).fill(pos).join(', ')}`,
+    ].join('; ');
+    editor.setDecorations(this.type, [
+      { range: new vscode.Range(anchor, 0, anchor, 0), renderOptions: { before: { contentText: '\u200b', textDecoration: css } } },
+    ]);
   }
 
   dispose() {

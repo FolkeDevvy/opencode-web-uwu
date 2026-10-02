@@ -2,7 +2,7 @@
   "name": "uwu-code",
   "displayName": "uwu-code",
   "description": "Super duper kawaii VS Code: pastel themes, sakura petals behind your code, sparkle bursts on save, gutter hearts, error kaomoji and a status-bar mascot ♡",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "folkedevvy",
   "icon": "media/icon.png",
   "repository": {
@@ -68,10 +68,23 @@
         },
         "uwu.petals.opacity": {
           "type": "number",
-          "default": 0.55,
+          "default": 0.7,
           "minimum": 0,
           "maximum": 1,
           "description": "How visible the petals are (0 = invisible, 1 = full)."
+        },
+        "uwu.petals.area": {
+          "type": "string",
+          "enum": [
+            "edges",
+            "everywhere"
+          ],
+          "enumDescriptions": [
+            "Keep the petals out of the code: invisible over the first ~24 text columns, fading in to full strength past ~72 columns (default)",
+            "Petals across the whole editor, behind the code too"
+          ],
+          "default": "edges",
+          "description": "Where the petals show up in the editor."
         },
         "uwu.petals.layers": {
           "type": "string",

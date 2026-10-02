@@ -21,7 +21,7 @@ opencode/
   tui/          opencode TUI themes
 vscode/
   uwu-code/     the VS Code extension (source)
-  uwu-code-0.1.0.vsix   ready-to-install package
+  uwu-code-0.1.1.vsix   ready-to-install package
 tools/          generators shared by everything above
   palette.py      the shared colour palette
   petals.py       falling-sakura SVG tiles (web + VS Code)

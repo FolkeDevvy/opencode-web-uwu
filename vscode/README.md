@@ -19,11 +19,11 @@ on Linux.
 ## Install (desktop VS Code)
 
 ```sh
-code --install-extension vscode/uwu-code-0.1.0.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.1.1.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.1.0.vsix`](uwu-code-0.1.0.vsix).
+[`uwu-code-0.1.1.vsix`](uwu-code-0.1.1.vsix).
 
 Then choose the colour theme: press `Ctrl+K Ctrl+T` and pick **uwu strawberry-milk night** or
 **uwu sakura cream day**. The petals, hearts and other effects work with any theme.
@@ -32,7 +32,8 @@ See the [extension README](uwu-code/README.md) for every feature and setting. Th
 
 ```jsonc
 "uwu.petals.enabled": true,
-"uwu.petals.opacity": 0.55,
+"uwu.petals.opacity": 0.7,
+"uwu.petals.area": "edges",       // or "everywhere"
 "uwu.petals.layers": "noFront",  // "far" | "noFront" | "all" (adds big soft petals up front; heavier)
 "uwu.sparkleOnSave": true,
 "uwu.gutterHearts": true,
@@ -54,7 +55,7 @@ Each effect can be switched off on its own.
 ```sh
 python3 tools/vscode_theme.py      # regenerate the colour themes from tools/palette.py
 python3 tools/petals.py            # regenerate the petal tiles (shared with the web theme)
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.1.0.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.1.1.vsix
 ```
 
 To try changes without packaging, run `code --extensionDevelopmentPath=$PWD/vscode/uwu-code`.
