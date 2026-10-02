@@ -5,7 +5,7 @@ as a Firefox `userContent.css`. No extensions needed.
 
 ![sakura petals falling in the wind](screenshots/uwu-demo.gif)
 
-▶ The full 20-second demo is [`screenshots/uwu-demo.mp4`](screenshots/uwu-demo.mp4).
+▶ The full 20-second, 60fps demo is [`screenshots/uwu-demo.mp4`](screenshots/uwu-demo.mp4).
 
 | 🌙 Strawberry-milk night | 🌸 Sakura cream day |
 | --- | --- |
@@ -58,14 +58,16 @@ it should survive most UI updates.
 
 ## Tweaking the petals
 
-There are two knobs near the top of `userContent.css`:
+There's one knob near the top of `userContent.css`:
 
 ```css
 --uwu-petal-opacity: 1;   /* 0 = no petals, .5 = subtler */
---uwu-wind-speed: 26s;    /* lower = windier */
 ```
 
-To change the number of petals, their size, colours or fall speed, edit `LAYERS` / `PINKS` in
+All the petal motion, wind included, runs inside the SVGs. Animating CSS
+`background-position` on such large backgrounds made browsers stutter. To change the wind
+(`WIND`; lower = windier), the number of petals, their size, colours or fall speed, edit
+`WIND` / `LAYERS` / `PINKS` in
 [`tools/petals.py`](tools/petals.py) and run `python3 tools/petals.py`. It regenerates
 the petal block inside `userContent.css`.
 

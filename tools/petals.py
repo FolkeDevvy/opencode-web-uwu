@@ -7,6 +7,13 @@ across the screen the petals flow over tile seams without popping. Sway,
 spin and the 3D "flip" all use periods that divide the fall period, so the
 loop is seamless too.
 
+The wind lives inside the SVG as well: the whole layer slides sideways by a
+whole number of tile widths per WIND cycle (petals are also drawn at x - k*W),
+with an ease-in-out spline for calm -> gust -> calm. Doing it here instead of
+animating CSS background-position matters: browsers re-rasterise huge
+repeating SVG backgrounds when their position animates, which made the
+petals visibly hitch every second or so.
+
     python3 tools/petals.py          # rewrites the PETALS block in userContent.css
 """
 import random
@@ -15,6 +22,8 @@ import urllib.parse
 from pathlib import Path
 
 CSS = Path(__file__).resolve().parent.parent / "chrome" / "userContent.css"
+
+WIND = 26  # seconds per calm -> gust -> calm cycle (lower = windier)
 
 # A sakura petal: rounded teardrop with the little notch at the tip.
 PETAL = (
@@ -25,7 +34,7 @@ PETAL = (
 VEIN = "M0 -5 C.6 0 .4 5 0 9"
 
 
-def tile(seed, w, h, count, scale, period, colors, opacity, blur=0):
+def tile(seed, w, h, count, scale, period, colors, opacity, blur=0, wind_tiles=1):
     rnd = random.Random(seed)
     defs = [
         f'<radialGradient id="g{i}" cx=".5" cy=".7" r=".8">'
@@ -71,13 +80,20 @@ def tile(seed, w, h, count, scale, period, colors, opacity, blur=0):
             f'dur="{flip_dur:.2f}s" begin="{begin:.2f}s" repeatCount="indefinite"/>'
             f'<use href="#p" fill="url(#g{g})"/></g></g></g>'
         )
-        petals.append(
+        motion = (
             f"<g><animateMotion path=\"{path}\" dur=\"{dur:.2f}s\" begin=\"{begin:.2f}s\" repeatCount=\"indefinite\"/>"
             f"{body}<g transform=\"translate(0 {-h})\">{body}</g></g>"
         )
+        # horizontal copies so the wind can carry petals across whole tiles seamlessly
+        petals.append(motion + "".join(
+            f'<g transform="translate({-k * w} 0)">{motion}</g>' for k in range(1, wind_tiles + 1)
+        ))
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">'
-        f"<defs>{''.join(defs)}</defs><g opacity=\"{opacity}\">{''.join(petals)}</g></svg>"
+        f"<defs>{''.join(defs)}</defs><g opacity=\"{opacity}\">"
+        f'<g><animateTransform attributeName="transform" type="translate" values="0 0;{wind_tiles * w} 0" '
+        f'keyTimes="0;1" calcMode="spline" keySplines=".45 0 .55 1" dur="{WIND}s" repeatCount="indefinite"/>'
+        f"{''.join(petals)}</g></g></svg>"
     )
     return 'url("data:image/svg+xml,' + urllib.parse.quote(svg, safe=" =:/;,.-_()'\"") .replace('"', "'") + '")'
 
@@ -87,11 +103,11 @@ PINKS = [("#ffe6f1", "#ff8fc2"), ("#ffd4e7", "#f9679f"), ("#fff0f6", "#ffa9cf"),
 LAYERS = {
     # front: a few big, soft, out-of-focus petals drifting closest to the "camera"
     # (still behind the UI; it is just the top background layer)
-    "--uwu-petals-front": tile(99, 1400, 1100, 4, (3.4, 4.6), (9, 12), PINKS, .62, blur=1.1),
+    "--uwu-petals-front": tile(99, 1400, 1100, 4, (3.4, 4.6), (9, 12), PINKS, .62, blur=1.1, wind_tiles=2),
     # far: small, pale, slow
     "--uwu-petals-far": tile(7, 610, 700, 10, (.7, 1.0), (16, 24), PINKS, .6),
     # near: bigger, brighter, a bit quicker
-    "--uwu-petals-near": tile(42, 1010, 900, 7, (1.3, 1.9), (10, 15), PINKS, .92),
+    "--uwu-petals-near": tile(42, 1010, 900, 7, (1.3, 1.9), (10, 15), PINKS, .92, wind_tiles=2),
 }
 
 
