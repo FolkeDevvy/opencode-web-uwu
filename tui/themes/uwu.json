@@ -1,0 +1,269 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "bgDark": "#21142a",
+    "bgLight": "#fff7fb",
+    "bgPanelDark": "#2b1a36",
+    "bgPanelLight": "#fff0f7",
+    "bgElementDark": "#362143",
+    "bgElementLight": "#ffe4f1",
+    "borderDark": "#5a376c",
+    "borderLight": "#f3b6d4",
+    "borderSubtleDark": "#3a2447",
+    "borderSubtleLight": "#ffd3e9",
+    "textDark": "#ffeaf6",
+    "textLight": "#57264c",
+    "textMutedDark": "#b98aab",
+    "textMutedLight": "#9a5f8a",
+    "inkDark": "#2a0c22",
+    "inkLight": "#ffffff",
+    "pinkDark": "#ff8fc8",
+    "pinkLight": "#e8438f",
+    "hotPinkDark": "#ff9fd0",
+    "hotPinkLight": "#c2337e",
+    "lavenderDark": "#c7a2ff",
+    "lavenderLight": "#8a4fe0",
+    "mintDark": "#8ff5cf",
+    "mintLight": "#13936a",
+    "skyDark": "#9fd8ff",
+    "skyLight": "#2f86c9",
+    "butterDark": "#ffe59a",
+    "butterLight": "#b07d00",
+    "peachDark": "#ffb79a",
+    "peachLight": "#e0703f",
+    "cherryDark": "#ff8aa5",
+    "cherryLight": "#e0325e",
+    "blushDark": "#d9a9cb",
+    "blushLight": "#9a5f8a",
+    "plumDark": "#9a7a9a",
+    "plumLight": "#b592ab",
+    "operatorDark": "#ffb3da",
+    "operatorLight": "#d14d93",
+    "punctDark": "#c79dbb",
+    "punctLight": "#a77396",
+    "lineNoDark": "#7f5a78",
+    "lineNoLight": "#c08db2",
+    "addBgDark": "#12352b",
+    "addBgLight": "#e3fbf1",
+    "addLnBgDark": "#0f2b23",
+    "addLnBgLight": "#d3f5e6",
+    "delBgDark": "#3a1426",
+    "delBgLight": "#ffe6ec",
+    "delLnBgDark": "#2e0f1e",
+    "delLnBgLight": "#ffd6e0",
+    "addHiDark": "#b8ffe4",
+    "addHiLight": "#0e7a52",
+    "delHiDark": "#ffb3c4",
+    "delHiLight": "#c21f4a"
+  },
+  "theme": {
+    "primary": {
+      "dark": "pinkDark",
+      "light": "pinkLight"
+    },
+    "secondary": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "accent": {
+      "dark": "mintDark",
+      "light": "mintLight"
+    },
+    "error": {
+      "dark": "cherryDark",
+      "light": "cherryLight"
+    },
+    "warning": {
+      "dark": "butterDark",
+      "light": "butterLight"
+    },
+    "success": {
+      "dark": "mintDark",
+      "light": "mintLight"
+    },
+    "info": {
+      "dark": "skyDark",
+      "light": "skyLight"
+    },
+    "text": {
+      "dark": "textDark",
+      "light": "textLight"
+    },
+    "textMuted": {
+      "dark": "textMutedDark",
+      "light": "textMutedLight"
+    },
+    "selectedListItemText": {
+      "dark": "inkDark",
+      "light": "inkLight"
+    },
+    "background": {
+      "dark": "bgDark",
+      "light": "bgLight"
+    },
+    "backgroundPanel": {
+      "dark": "bgPanelDark",
+      "light": "bgPanelLight"
+    },
+    "backgroundElement": {
+      "dark": "bgElementDark",
+      "light": "bgElementLight"
+    },
+    "backgroundMenu": {
+      "dark": "bgPanelDark",
+      "light": "bgPanelLight"
+    },
+    "border": {
+      "dark": "borderDark",
+      "light": "borderLight"
+    },
+    "borderActive": {
+      "dark": "pinkDark",
+      "light": "pinkLight"
+    },
+    "borderSubtle": {
+      "dark": "borderSubtleDark",
+      "light": "borderSubtleLight"
+    },
+    "diffAdded": {
+      "dark": "mintDark",
+      "light": "mintLight"
+    },
+    "diffRemoved": {
+      "dark": "cherryDark",
+      "light": "cherryLight"
+    },
+    "diffContext": {
+      "dark": "textMutedDark",
+      "light": "textMutedLight"
+    },
+    "diffHunkHeader": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "diffHighlightAdded": {
+      "dark": "addHiDark",
+      "light": "addHiLight"
+    },
+    "diffHighlightRemoved": {
+      "dark": "delHiDark",
+      "light": "delHiLight"
+    },
+    "diffAddedBg": {
+      "dark": "addBgDark",
+      "light": "addBgLight"
+    },
+    "diffRemovedBg": {
+      "dark": "delBgDark",
+      "light": "delBgLight"
+    },
+    "diffContextBg": {
+      "dark": "bgPanelDark",
+      "light": "bgPanelLight"
+    },
+    "diffLineNumber": {
+      "dark": "lineNoDark",
+      "light": "lineNoLight"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "addLnBgDark",
+      "light": "addLnBgLight"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "delLnBgDark",
+      "light": "delLnBgLight"
+    },
+    "markdownText": {
+      "dark": "textDark",
+      "light": "textLight"
+    },
+    "markdownHeading": {
+      "dark": "pinkDark",
+      "light": "pinkLight"
+    },
+    "markdownLink": {
+      "dark": "skyDark",
+      "light": "skyLight"
+    },
+    "markdownLinkText": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "markdownCode": {
+      "dark": "mintDark",
+      "light": "mintLight"
+    },
+    "markdownBlockQuote": {
+      "dark": "blushDark",
+      "light": "blushLight"
+    },
+    "markdownEmph": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "markdownStrong": {
+      "dark": "hotPinkDark",
+      "light": "hotPinkLight"
+    },
+    "markdownHorizontalRule": {
+      "dark": "borderDark",
+      "light": "borderLight"
+    },
+    "markdownListItem": {
+      "dark": "pinkDark",
+      "light": "pinkLight"
+    },
+    "markdownListEnumeration": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "markdownImage": {
+      "dark": "skyDark",
+      "light": "skyLight"
+    },
+    "markdownImageText": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "markdownCodeBlock": {
+      "dark": "textDark",
+      "light": "textLight"
+    },
+    "syntaxComment": {
+      "dark": "plumDark",
+      "light": "plumLight"
+    },
+    "syntaxKeyword": {
+      "dark": "pinkDark",
+      "light": "pinkLight"
+    },
+    "syntaxFunction": {
+      "dark": "lavenderDark",
+      "light": "lavenderLight"
+    },
+    "syntaxVariable": {
+      "dark": "textDark",
+      "light": "textLight"
+    },
+    "syntaxString": {
+      "dark": "mintDark",
+      "light": "mintLight"
+    },
+    "syntaxNumber": {
+      "dark": "skyDark",
+      "light": "skyLight"
+    },
+    "syntaxType": {
+      "dark": "butterDark",
+      "light": "butterLight"
+    },
+    "syntaxOperator": {
+      "dark": "operatorDark",
+      "light": "operatorLight"
+    },
+    "syntaxPunctuation": {
+      "dark": "punctDark",
+      "light": "punctLight"
+    }
+  }
+}
