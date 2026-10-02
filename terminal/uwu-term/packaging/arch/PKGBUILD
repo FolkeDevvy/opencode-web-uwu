@@ -1,0 +1,48 @@
+# ♡ uwu-term ✧ a kawaii terminal for KDE Plasma / Wayland
+# Build:  makepkg -si   (run in this folder)
+pkgname=uwu-term-git
+_name=uwu-term
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='A super kawaii terminal emulator (sakura petals, a bunny mascot, confetti) ♡'
+arch=('x86_64' 'aarch64')
+url='https://github.com/folkedevvy/opencode-web-uwu'
+license=('unknown')
+depends=('electron' 'hicolor-icon-theme')
+makedepends=('git' 'npm' 'python' 'gcc' 'make')
+optdepends=('ttf-jetbrains-mono: the default terminal font'
+            'ttf-nerd-fonts-symbols: icons in fancy prompts')
+provides=("$_name")
+conflicts=("$_name")
+source=("$_name::git+$url.git#branch=main")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_name/terminal/uwu-term"
+  printf '%s.r%s.%s' "$(node -p "require('./package.json').version")" \
+    "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$_name/terminal/uwu-term"
+  # Electron itself comes from the Arch 'electron' package, so skip the dev
+  # dependency. node-pty uses N-API, so building it against Node works fine
+  # inside Electron.
+  npm ci --omit=dev --no-audit --no-fund
+}
+
+package() {
+  cd "$_name/terminal/uwu-term"
+  local app="$pkgdir/usr/lib/$_name"
+  install -d "$app"
+  cp -r main.js preload.js package.json renderer shell assets node_modules "$app/"
+  # build leftovers that aren't needed at runtime
+  rm -rf "$app/node_modules/node-pty/"{src,deps,third_party,prebuilds,build/Release/obj.target,build/Release/.deps}
+
+  install -Dm755 packaging/arch/uwu-term.sh "$pkgdir/usr/bin/$_name"
+  install -Dm644 packaging/arch/uwu-term.desktop "$pkgdir/usr/share/applications/$_name.desktop"
+  install -Dm644 assets/icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_name.svg"
+  install -Dm644 assets/icon.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/$_name.png"
+  install -Dm644 assets/icon-512.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/$_name.png"
+  install -Dm644 renderer/fonts/OFL.txt "$pkgdir/usr/share/licenses/$pkgname/Nunito-OFL.txt"
+}

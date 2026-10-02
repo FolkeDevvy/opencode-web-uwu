@@ -1,0 +1,226 @@
+/* ♡ uwu-term ✧ */
+@font-face {
+  font-family: "uwu Nunito";
+  src: url("fonts/Nunito-latin.woff2") format("woff2");
+  font-weight: 400 900;
+}
+
+@property --uwu-spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+:root {
+  --font: "uwu Nunito", "Nunito", system-ui, sans-serif;
+  --bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --pink: #ff8fc8; --hot: #ff5fae; --lav: #c7a2ff; --mint: #8ff5cf; --sky: #9fd8ff; --butter: #ffe59a;
+}
+html.dark {
+  --window: #170d1d; --card: 33, 20, 42; --raise: #362143; --text: #ffeaf6; --muted: #c79dbb;
+  --line: #ff8fc838; --line-strong: #ff8fc870; --glow: #ff8fc855; --dot: #ff8fc81a; --ink: #2a0c22;
+}
+html.light {
+  --window: #ffe1ef; --card: 255, 247, 251; --raise: #ffe4f1; --text: #57264c; --muted: #9a5f8a;
+  --line: #e8438f2e; --line-strong: #e8438f66; --glow: #ff5fae40; --dot: #ff5fae22; --ink: #ffffff;
+  --pink: #e8438f; --lav: #8a4fe0;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; color: var(--text); font-family: var(--font); user-select: none; }
+
+/* the whole window is one rounded candy card */
+#frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1.5px solid var(--line-strong);
+  background:
+    radial-gradient(circle at 8% 0%, #ff8fc833, transparent 40%),
+    radial-gradient(circle at 100% 100%, #c7a2ff33, transparent 45%),
+    radial-gradient(var(--dot) 1.4px, transparent 1.6px) 0 0 / 20px 20px,
+    var(--window);
+}
+html.maximized #frame { border-radius: 0; border: 0; }
+/* petals drift behind everything */
+#frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--uwu-petals);
+  background-size: var(--uwu-petals-size);
+  opacity: .6;
+}
+html.no-petals #frame::before { display: none; }
+
+/* ─────────────── title bar ─────────────── */
+#titlebar {
+  position: relative;
+  z-index: 2;
+  height: 44px;
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 0 12px;
+  -webkit-app-region: drag;
+  background: linear-gradient(90deg, #ff8fc830, #c7a2ff28, #8ff5cf1f, #ff8fc830) 0 0 / 300% 100%;
+  animation: drift 18s linear infinite;
+}
+#titlebar button, #tabs, #mascot { -webkit-app-region: no-drag; }
+#brand { display: flex; align-items: center; gap: 7px; margin-right: 4px; }
+#brand .logo { width: 24px; height: 24px; background: var(--uwu-logo) center / contain no-repeat; animation: wiggle-slow 6s ease-in-out infinite; }
+#brand .name {
+  font-weight: 900;
+  font-size: 15px;
+  background: linear-gradient(90deg, var(--pink), var(--lav));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+#tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; min-width: 0; padding: 4px 2px; }
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  max-width: 220px;
+  padding: 0 6px 0 12px;
+  border-radius: 99px;
+  background: var(--raise);
+  color: var(--muted);
+  font: 700 12.5px var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .25s var(--bounce), background .2s;
+  animation: pop .45s var(--bounce) both;
+}
+.tab:hover { transform: translateY(-1px); }
+.tab .title { overflow: hidden; text-overflow: ellipsis; }
+.tab .title::before { content: "♡ "; color: var(--pink); }
+.tab.active { background: linear-gradient(135deg, var(--pink), var(--lav)); color: var(--ink); box-shadow: 0 4px 14px var(--glow); }
+.tab.active .title::before { content: "♥ "; color: var(--ink); }
+.tab.busy .title::before { content: "✧ "; animation: spin 1.6s linear infinite; display: inline-block; }
+.tab .x {
+  width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; line-height: 1; opacity: .7; transition: background .2s, transform .25s var(--bounce);
+}
+.tab .x:hover { background: #ffffff40; transform: scale(1.2) rotate(90deg); opacity: 1; }
+#new-tab {
+  border: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--raise); color: var(--pink); font: 900 16px var(--font); cursor: pointer;
+  transition: transform .3s var(--bounce);
+}
+#new-tab:hover { transform: rotate(90deg) scale(1.15); }
+#spacer { flex: 1; }
+#mascot {
+  width: 38px; height: 38px; cursor: pointer;
+  background: var(--uwu-mascot) center / contain no-repeat;
+  filter: drop-shadow(0 3px 8px var(--glow));
+  animation: float 3.2s ease-in-out infinite;
+  transition: transform .3s var(--bounce);
+}
+#mascot:hover { transform: scale(1.15) rotate(-8deg); }
+#mascot.jump { animation: jump .7s var(--bounce); }
+#mascot.sad { animation: sad 2.4s ease-in-out infinite; filter: drop-shadow(0 3px 8px #9fd8ff88) saturate(.7); }
+html.no-mascot #mascot, html.no-mascot #bubble { display: none; }
+#controls { display: flex; gap: 8px; margin-left: 6px; }
+#controls button {
+  width: 15px; height: 15px; border-radius: 50%; border: 0; cursor: pointer; position: relative;
+  transition: transform .25s var(--bounce);
+}
+#controls button:hover { transform: scale(1.25); }
+#min { background: var(--butter); }
+#max { background: var(--mint); }
+#close { background: var(--hot); }
+#controls button::after {
+  content: ""; position: absolute; inset: 0; display: grid; place-items: center;
+  font: 900 9px var(--font); color: #2a0c22; opacity: 0; transition: opacity .2s;
+}
+#controls:hover button::after { opacity: .75; }
+#min::after { content: "–"; }
+#max::after { content: "+"; }
+#close::after { content: "♥"; }
+
+/* ─────────────── terminals ─────────────── */
+#terminals { position: relative; flex: 1; margin: 2px 10px 10px; z-index: 1; }
+.term {
+  position: absolute;
+  inset: 0;
+  padding: 12px 6px 8px 14px;
+  border-radius: 16px;
+  background: rgba(var(--card), var(--opacity, .86));
+  box-shadow: 0 0 0 1.5px var(--line-strong), 0 10px 30px #0a000f44, 0 0 26px var(--glow);
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(.985);
+  transition: opacity .25s, transform .3s var(--bounce);
+}
+.term.active { visibility: visible; opacity: 1; transform: none; }
+.term .xterm { height: 100%; }
+.term .xterm-viewport { background: transparent !important; scrollbar-width: thin; scrollbar-color: var(--pink) transparent; }
+.term .xterm-screen canvas { border-radius: 4px; }
+
+/* ─────────────── speech bubble, menu, effects ─────────────── */
+#bubble {
+  position: absolute; z-index: 5; top: 50px; right: 70px; max-width: 280px;
+  padding: 8px 14px; border-radius: 18px 4px 18px 18px;
+  background: linear-gradient(135deg, var(--pink), var(--lav)); color: #2a0c22;
+  font: 800 13px var(--font); box-shadow: 0 8px 24px var(--glow);
+  opacity: 0; transform: translateY(-8px) scale(.9); pointer-events: none;
+  transition: opacity .3s, transform .4s var(--bounce);
+}
+#bubble.show { opacity: 1; transform: none; }
+.menu {
+  position: fixed; z-index: 20; min-width: 190px; padding: 6px;
+  border-radius: 16px; border: 1.5px solid var(--line-strong);
+  background: rgb(var(--card)); box-shadow: 0 14px 40px #0a000f66, 0 0 24px var(--glow);
+  font: 700 13px var(--font); animation: pop .25s var(--bounce) both;
+}
+.menu div { padding: 7px 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; gap: 18px; }
+.menu div span { color: var(--muted); font-size: 11px; }
+.menu div:hover { background: linear-gradient(90deg, var(--pink), var(--lav)); color: var(--ink); }
+.menu div:hover span { color: var(--ink); }
+.menu hr { border: 0; border-top: 1.5px dashed var(--line-strong); margin: 4px 6px; }
+
+.fx { position: fixed; pointer-events: none; z-index: 30; will-change: transform, opacity; font-family: var(--font); }
+.particle {
+  left: 0; top: 0; font-weight: 900; text-shadow: 0 0 6px currentColor;
+  animation: particle var(--d, .8s) cubic-bezier(.2, .8, .3, 1) forwards;
+}
+.confetti { top: -20px; width: 9px; height: 14px; border-radius: 3px; animation: confetti var(--d, 2.4s) linear forwards; }
+
+#splash {
+  position: absolute; inset: 0; z-index: 40; border-radius: 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: radial-gradient(circle at 30% 20%, #ff8fc855, transparent 50%), radial-gradient(circle at 70% 80%, #c7a2ff55, transparent 50%), var(--window);
+  transition: opacity .5s, transform .5s;
+}
+#splash.out { opacity: 0; transform: scale(1.05); pointer-events: none; }
+#splash .logo { width: 96px; height: 96px; background: var(--uwu-logo) center / contain no-repeat; filter: drop-shadow(0 10px 26px #ff8fc888); animation: boot .9s var(--bounce) both, float 3s ease-in-out .9s infinite; }
+#splash .title { display: flex; font: 900 34px var(--font); }
+#splash .title span {
+  background: linear-gradient(135deg, #ff8fc8, #c7a2ff); -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: letter .7s var(--bounce) both;
+}
+#splash .sub { font: 700 13px var(--font); color: var(--muted); letter-spacing: .12em; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+@keyframes drift { to { background-position: 300% 0; } }
+@keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes wiggle-slow { 0%, 86%, 100% { transform: rotate(0); } 90% { transform: rotate(-14deg); } 95% { transform: rotate(10deg); } }
+@keyframes jump { 0% { transform: none; } 35% { transform: translateY(-10px) rotate(-12deg) scale(1.2); } 70% { transform: scale(1.1, .9); } 100% { transform: none; } }
+@keyframes sad { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg) translateY(2px); } }
+@keyframes particle {
+  0% { opacity: 1; transform: translate(var(--x0), var(--y0)) scale(.4); }
+  100% { opacity: 0; transform: translate(calc(var(--x0) + var(--dx)), calc(var(--y0) + var(--dy))) scale(var(--s, 1)) rotate(var(--r, 90deg)); }
+}
+@keyframes confetti {
+  0% { transform: translate(var(--x0), -20px) rotate(0); }
+  100% { transform: translate(calc(var(--x0) + var(--dx)), 105vh) rotate(var(--r, 720deg)); }
+}
+@keyframes boot { 0% { opacity: 0; transform: scale(.3) rotate(-40deg); } 100% { opacity: 1; transform: none; } }
+@keyframes letter { 0% { opacity: 0; transform: translateY(26px) scale(.5); } 100% { opacity: 1; transform: none; } }

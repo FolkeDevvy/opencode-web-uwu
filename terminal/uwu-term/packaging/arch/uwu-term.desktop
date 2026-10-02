@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=uwu-term
+GenericName=Terminal
+Comment=A super kawaii terminal ♡
+Exec=uwu-term
+Icon=uwu-term
+Terminal=false
+Categories=System;TerminalEmulator;Utility;
+Keywords=shell;prompt;command;terminal;kawaii;uwu;
+StartupWMClass=uwu-term
+StartupNotify=true
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=uwu-term
