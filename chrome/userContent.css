@@ -1,0 +1,626 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ♡ ✧ opencode-web-uwu ✧ ♡
+   A super duper kawaii theme for the OpenCode v2 web UI (opencode 2.x).
+
+   Drop this file into   <firefox-profile>/chrome/userContent.css
+   and enable   toolkit.legacyUserProfileCustomizations.stylesheets   in
+   about:config. See README.md for the full walkthrough.
+
+   Scoping: every rule lives under  :root:has(#oc-theme-preload-script) , a
+   script tag only the OpenCode web app ships, so the theme follows OpenCode
+   to whatever host/port you run it on and never touches other websites.
+
+   Everything is !important because Firefox user stylesheets lose to page
+   styles otherwise (user-normal < author-normal < author-important <
+   user-important).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=M+PLUS+Rounded+1c:wght@400;700&family=Fira+Code:wght@400;500&display=swap");
+
+:root:has(#oc-theme-preload-script) {
+
+  /* ─────────────────────────────── palette ─────────────────────────────── */
+  --uwu-pink: #ff8fc8 !important;
+  --uwu-pink-hot: #ff5fae !important;
+  --uwu-lavender: #c7a2ff !important;
+  --uwu-mint: #8ff5cf !important;
+  --uwu-sky: #9fd8ff !important;
+  --uwu-butter: #ffe59a !important;
+  --uwu-peach: #ffb79a !important;
+  --uwu-cherry: #ff6b8b !important;
+
+  --uwu-font: "Nunito", "M PLUS Rounded 1c", "Quicksand", "Varela Round", ui-rounded, "SF Pro Rounded", system-ui, sans-serif !important;
+  --uwu-mono: "Fira Code", "JetBrains Mono", "Cascadia Code", ui-monospace, monospace !important;
+  --uwu-radius: 18px !important;
+  --uwu-bounce: cubic-bezier(.34, 1.56, .64, 1) !important;
+
+  --v2-font-family-sans: var(--uwu-font) !important;
+  --font-family-sans: var(--uwu-font) !important;
+  --font-family-text: var(--uwu-font) !important;
+  --font-family-mono: var(--uwu-mono) !important;
+  --v2-font-family-mono: var(--uwu-mono) !important;
+
+  /* ─────────────────────── 🌙 strawberry-milk night ─────────────────────── */
+  &[data-color-scheme=dark] {
+    --uwu-bg-deep: #170d1d !important;
+    --uwu-bg-base: #21142a !important;
+    --uwu-ink: #ffeaf6 !important;
+    --uwu-glow: rgba(255, 143, 200, .35) !important;
+    --uwu-dot: rgba(255, 143, 200, .07) !important;
+    --uwu-bubble-a: #ff7ab8 !important;
+    --uwu-bubble-b: #b98bff !important;
+    --uwu-bubble-ink: #2a0c22 !important;
+    --uwu-head-a: #ff8fc8 !important;
+    --uwu-head-b: #c7a2ff !important;
+    --uwu-em: #c7a2ff !important;
+
+    --v2-background-bg-deep: var(--uwu-bg-deep) !important;
+    --v2-background-bg-base: var(--uwu-bg-base) !important;
+    --v2-background-bg-layer-01: #2b1a36 !important;
+    --v2-background-bg-layer-02: #362143 !important;
+    --v2-background-bg-layer-03: #462b56 !important;
+    --v2-background-bg-layer-04: #5a376c !important;
+    --v2-background-bg-inverse: #fff3fa !important;
+    --v2-background-bg-contrast: #ff8fc8 !important;
+    --v2-background-bg-icon-button-contrast: #ffc4e2 !important;
+    --v2-background-bg-button-neutral: rgba(255, 170, 215, .09) !important;
+    --v2-background-bg-accent: #ff6fb5 !important;
+    --v2-background-bg-code-path: #3a1f45 !important;
+
+    --v2-text-text-base: var(--uwu-ink) !important;
+    --v2-text-text-muted: #d9a9cb !important;
+    --v2-text-text-faint: #a97f9f !important;
+    --v2-text-text-inverse: #2a0c22 !important;
+    --v2-text-text-contrast: #2a0c22 !important;
+    --v2-text-text-accent: #ff9fd0 !important;
+    --v2-text-text-accent-hover: #ffc4e2 !important;
+    --v2-text-text-code-accent: #8ff5cf !important;
+    --v2-text-text-code-path: #c7a2ff !important;
+
+    --v2-icon-icon-base: #f2b8d9 !important;
+    --v2-icon-icon-muted: #b98aab !important;
+    --v2-icon-icon-faint: #7f5a78 !important;
+    --v2-icon-icon-inverse: #2a0c22 !important;
+    --v2-icon-icon-contrast: #ffeaf6 !important;
+    --v2-icon-icon-accent: #ff8fc8 !important;
+    --v2-icon-icon-accent-hover: #ffc4e2 !important;
+
+    --v2-border-border-muted: rgba(255, 143, 200, .12) !important;
+    --v2-border-border-base: rgba(255, 143, 200, .2) !important;
+    --v2-border-border-strong: rgba(255, 143, 200, .38) !important;
+    --v2-border-border-inverse: #ffeaf6 !important;
+    --v2-border-border-focus: #ff8fc8 !important;
+
+    --v2-overlay-simple-overlay-hover: rgba(255, 143, 200, .1) !important;
+    --v2-overlay-simple-overlay-pressed: rgba(255, 143, 200, .18) !important;
+    --v2-overlay-simple-overlay-scrim: rgba(23, 6, 28, .66) !important;
+
+    --v2-state-bg-success: #11352b !important;
+    --v2-state-fg-success: #8ff5cf !important;
+    --v2-state-border-success: #2f7a63 !important;
+    --v2-state-bg-warning: #3a2f12 !important;
+    --v2-state-fg-warning: #ffe59a !important;
+    --v2-state-border-warning: #8a7330 !important;
+    --v2-state-bg-danger: #3d1222 !important;
+    --v2-state-fg-danger: #ff8aa5 !important;
+    --v2-state-border-danger: #9a3456 !important;
+    --v2-state-bg-info: #24204a !important;
+    --v2-state-fg-info: #b6c8ff !important;
+    --v2-state-border-info: #5560a8 !important;
+
+    --v2-agent-build-solid: #ff8fc8 !important;
+    --v2-agent-build-border: rgba(255, 143, 200, .3) !important;
+    --v2-agent-build-background: rgba(255, 143, 200, .08) !important;
+    --v2-agent-plan-solid: #c7a2ff !important;
+    --v2-agent-plan-border: rgba(199, 162, 255, .3) !important;
+    --v2-agent-plan-background: rgba(199, 162, 255, .08) !important;
+    --v2-agent-explore-solid: #ffe59a !important;
+    --v2-agent-review-solid: #8ff5cf !important;
+    --v2-agent-writer-solid: #9fd8ff !important;
+
+    --v2-elevation-raised: 0 2px 10px rgba(10, 0, 15, .35), 0 0 0 1px rgba(255, 143, 200, .14) !important;
+    --v2-elevation-floating: 0 10px 30px rgba(10, 0, 15, .45), 0 0 0 1px rgba(255, 143, 200, .22), 0 0 24px rgba(255, 143, 200, .12) !important;
+    --v2-elevation-overlay: 0 18px 50px rgba(10, 0, 15, .55), 0 0 0 1px rgba(255, 143, 200, .28), 0 0 40px rgba(255, 143, 200, .16) !important;
+
+    /* legacy (v1-era) tokens still used by markdown, diffs and shiki */
+    --text-base: #ffeaf6 !important;
+    --text-strong: #fff6fb !important;
+    --text-weak: #d9a9cb !important;
+    --text-weaker: #a97f9f !important;
+    --background-stronger: #1d1124 !important;
+    --color-background-stronger: #1d1124 !important;
+    --surface-raised-base: #2b1a36 !important;
+    --surface-diff-add-base: #0f2b23 !important;
+    --surface-diff-add-weak: #12352b !important;
+    --surface-diff-add-strong: #1a4a3b !important;
+    --surface-diff-delete-base: #2e0f1e !important;
+    --surface-diff-delete-weak: #3a1426 !important;
+    --surface-diff-delete-strong: #521b34 !important;
+
+    --syntax-comment: #9a7a9a !important;
+    --syntax-keyword: #ff8fc8 !important;
+    --syntax-string: #8ff5cf !important;
+    --syntax-primitive: #9fd8ff !important;
+    --syntax-variable: #ffeaf6 !important;
+    --syntax-property: #c7a2ff !important;
+    --syntax-type: #ffe59a !important;
+    --syntax-constant: #ffb79a !important;
+    --syntax-operator: #ffb3da !important;
+    --syntax-punctuation: #c79dbb !important;
+    --syntax-object: #c7a2ff !important;
+    --syntax-regexp: #ff9fb0 !important;
+  }
+
+  /* ─────────────────────────── 🌸 sakura cream day ───────────────────────── */
+  &[data-color-scheme=light] {
+    --uwu-bg-deep: #ffe1ef !important;
+    --uwu-bg-base: #fff7fb !important;
+    --uwu-ink: #57264c !important;
+    --uwu-glow: rgba(255, 95, 174, .28) !important;
+    --uwu-dot: rgba(255, 95, 174, .09) !important;
+    --uwu-bubble-a: #ff7ab8 !important;
+    --uwu-bubble-b: #b98bff !important;
+    --uwu-bubble-ink: #ffffff !important;
+    --uwu-head-a: #e8438f !important;
+    --uwu-head-b: #8a4fe0 !important;
+    --uwu-em: #8a4fe0 !important;
+
+    --v2-background-bg-deep: var(--uwu-bg-deep) !important;
+    --v2-background-bg-base: var(--uwu-bg-base) !important;
+    --v2-background-bg-layer-01: #fff0f7 !important;
+    --v2-background-bg-layer-02: #ffe4f1 !important;
+    --v2-background-bg-layer-03: #ffd3e9 !important;
+    --v2-background-bg-layer-04: #ffbfdf !important;
+    --v2-background-bg-inverse: #57264c !important;
+    --v2-background-bg-contrast: #ff5fae !important;
+    --v2-background-bg-icon-button-contrast: #ff5fae !important;
+    --v2-background-bg-button-neutral: #ffffff !important;
+    --v2-background-bg-accent: #ff5fae !important;
+    --v2-background-bg-code-path: #fbe3ff !important;
+
+    --v2-text-text-base: var(--uwu-ink) !important;
+    --v2-text-text-muted: #9a5f8a !important;
+    --v2-text-text-faint: #c08db2 !important;
+    --v2-text-text-inverse: #ffffff !important;
+    --v2-text-text-contrast: #ffffff !important;
+    --v2-text-text-accent: #e8438f !important;
+    --v2-text-text-accent-hover: #ff5fae !important;
+    --v2-text-text-code-accent: #c2337e !important;
+    --v2-text-text-code-path: #7b45d6 !important;
+
+    --v2-icon-icon-base: #b4588f !important;
+    --v2-icon-icon-muted: #c98bb3 !important;
+    --v2-icon-icon-faint: #e2b6d0 !important;
+    --v2-icon-icon-inverse: #ffffff !important;
+    --v2-icon-icon-contrast: #ffffff !important;
+    --v2-icon-icon-accent: #ff5fae !important;
+    --v2-icon-icon-accent-hover: #e8438f !important;
+
+    --v2-border-border-muted: rgba(232, 67, 143, .12) !important;
+    --v2-border-border-base: rgba(232, 67, 143, .2) !important;
+    --v2-border-border-strong: rgba(232, 67, 143, .36) !important;
+    --v2-border-border-inverse: #57264c !important;
+    --v2-border-border-focus: #ff5fae !important;
+
+    --v2-overlay-simple-overlay-hover: rgba(255, 95, 174, .08) !important;
+    --v2-overlay-simple-overlay-pressed: rgba(255, 95, 174, .15) !important;
+    --v2-overlay-simple-overlay-scrim: rgba(255, 210, 232, .6) !important;
+
+    --v2-state-bg-success: #e3fbf1 !important;
+    --v2-state-fg-success: #1d9a6c !important;
+    --v2-state-border-success: #9fe3c8 !important;
+    --v2-state-bg-warning: #fff6d9 !important;
+    --v2-state-fg-warning: #b07d00 !important;
+    --v2-state-border-warning: #f3d98a !important;
+    --v2-state-bg-danger: #ffe6ec !important;
+    --v2-state-fg-danger: #e0325e !important;
+    --v2-state-border-danger: #ffb0c4 !important;
+    --v2-state-bg-info: #ece9ff !important;
+    --v2-state-fg-info: #5f55d6 !important;
+    --v2-state-border-info: #c3bcff !important;
+
+    --v2-agent-build-solid: #ff5fae !important;
+    --v2-agent-plan-solid: #9a6cf0 !important;
+    --v2-agent-explore-solid: #d9a400 !important;
+    --v2-agent-review-solid: #1d9a6c !important;
+    --v2-agent-writer-solid: #3d9ad6 !important;
+
+    --v2-elevation-raised: 0 2px 10px rgba(232, 67, 143, .1), 0 0 0 1px rgba(232, 67, 143, .12) !important;
+    --v2-elevation-floating: 0 10px 30px rgba(232, 67, 143, .16), 0 0 0 1px rgba(232, 67, 143, .16) !important;
+    --v2-elevation-overlay: 0 18px 50px rgba(232, 67, 143, .22), 0 0 0 1px rgba(232, 67, 143, .2) !important;
+
+    --text-base: #57264c !important;
+    --text-strong: #3e1436 !important;
+    --text-weak: #9a5f8a !important;
+    --text-weaker: #c08db2 !important;
+    --background-stronger: #fff2f8 !important;
+    --color-background-stronger: #fff2f8 !important;
+    --surface-raised-base: #fff0f7 !important;
+
+    --syntax-comment: #b592ab !important;
+    --syntax-keyword: #e8438f !important;
+    --syntax-string: #13936a !important;
+    --syntax-primitive: #2f86c9 !important;
+    --syntax-variable: #57264c !important;
+    --syntax-property: #7b45d6 !important;
+    --syntax-type: #b07d00 !important;
+    --syntax-constant: #e0703f !important;
+    --syntax-operator: #d14d93 !important;
+    --syntax-punctuation: #a77396 !important;
+    --syntax-object: #7b45d6 !important;
+    --syntax-regexp: #e0325e !important;
+  }
+
+  /* ──────────────────────────── global sprinkles ─────────────────────────── */
+  & {
+    background: var(--uwu-bg-deep) !important;
+    accent-color: var(--uwu-pink) !important;
+    scrollbar-color: var(--uwu-pink) transparent !important;
+  }
+
+  body {
+    font-family: var(--uwu-font) !important;
+    background:
+      radial-gradient(circle at 12% 8%, var(--uwu-glow), transparent 38%),
+      radial-gradient(circle at 92% 96%, rgba(199, 162, 255, .25), transparent 40%),
+      radial-gradient(var(--uwu-dot) 1.6px, transparent 1.8px) 0 0 / 22px 22px,
+      var(--uwu-bg-deep) !important;
+  }
+
+  ::selection {
+    background: rgba(255, 143, 200, .45) !important;
+    color: inherit !important;
+  }
+
+  *::-webkit-scrollbar-thumb { background: var(--uwu-pink) !important; border-radius: 99px !important; }
+
+  :focus-visible {
+    outline: 2px dashed var(--uwu-pink) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* little heart cursor on anything clickable ♡ */
+  :is(button, a, [role=button], [role=tab], [role=menuitem], [data-component=home-session-row]):not(:disabled) {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2.1 0 3.6 1.2 4.4 2.6.8-1.4 2.3-2.6 4.4-2.6 3.6 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z' fill='%23ff8fc8' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E") 12 12, pointer !important;
+  }
+
+  /* ───────────────────────────────── titlebar ──────────────────────────────── */
+  [data-slot=titlebar-v2] {
+    background: linear-gradient(90deg, rgba(255, 143, 200, .18), rgba(199, 162, 255, .16) 50%, rgba(143, 245, 207, .12)) !important;
+    border-bottom: 1px dashed var(--v2-border-border-base) !important;
+  }
+
+  [data-slot=titlebar-v2]::after {
+    content: "✧ ˖ ° ♡ opencode uwu ♡ ° ˖ ✧";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font: 800 11px/1 var(--uwu-font);
+    letter-spacing: .12em;
+    color: var(--v2-text-text-accent);
+    opacity: .85;
+    pointer-events: none;
+    text-shadow: 0 0 10px var(--uwu-glow);
+  }
+
+  [data-slot=titlebar-tab-item] {
+    border-radius: 12px 12px 12px 12px !important;
+    transition: transform .25s var(--uwu-bounce), background .2s !important;
+  }
+  [data-slot=titlebar-tab-item]:hover { transform: translateY(-1px) !important; }
+  [data-slot=titlebar-tab-item]:is([data-selected], [aria-selected=true], [data-active]) {
+    background: var(--v2-background-bg-layer-02) !important;
+    box-shadow: 0 0 0 1px var(--v2-border-border-strong), 0 0 14px var(--uwu-glow) !important;
+  }
+
+  /* the big rounded content card + composer dock share one fixed dot grid,
+     so the pattern lines up seamlessly behind both */
+  :is([class~="bg-v2-background-bg-base"], [data-component=session-composer-dock]) {
+    background:
+      radial-gradient(var(--uwu-dot) 1.5px, transparent 1.7px) 0 0 / 22px 22px fixed,
+      var(--v2-background-bg-base) !important;
+  }
+  [class~="bg-v2-background-bg-base"][class*="rounded-"] {
+    border-radius: 22px !important;
+    box-shadow: 0 0 0 1.5px var(--v2-border-border-base), 0 10px 40px rgba(0, 0, 0, .25), 0 0 60px rgba(255, 143, 200, .08) !important;
+  }
+
+  /* ───────────────────────────────── buttons ───────────────────────────────── */
+  :is([data-component=button-v2], [data-component=icon-button-v2]) {
+    border-radius: 999px !important;
+    transition: transform .25s var(--uwu-bounce), box-shadow .2s, background .2s !important;
+  }
+  :is([data-component=button-v2], [data-component=icon-button-v2]):hover:not(:disabled) {
+    transform: translateY(-1px) scale(1.04) !important;
+  }
+  :is([data-component=button-v2], [data-component=icon-button-v2]):active:not(:disabled) {
+    transform: scale(.94) !important;
+  }
+
+  [data-component=button-v2]:is([data-variant=contrast], [data-variant=primary]),
+  [data-component=icon-button-v2][data-variant=submit] {
+    background: linear-gradient(135deg, var(--uwu-bubble-a), var(--uwu-bubble-b)) !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 14px var(--uwu-glow), inset 0 1px 0 rgba(255, 255, 255, .45) !important;
+    text-shadow: 0 1px 2px rgba(120, 20, 80, .35) !important;
+  }
+  [data-component=icon-button-v2][data-variant=submit] [data-slot=icon-svg] { color: #fff !important; }
+  [data-component=icon-button-v2][data-variant=submit]:disabled {
+    filter: saturate(.55) !important;
+    opacity: .7 !important;
+  }
+
+  /* ───────────────────────────── inputs & composer ─────────────────────────── */
+  input:not([type=checkbox], [type=radio], [type=range]), textarea, [data-component=home-session-search] {
+    border-radius: 14px !important;
+    caret-color: var(--uwu-pink) !important;
+  }
+  input:not([type=checkbox], [type=radio], [type=range]):focus, textarea:focus {
+    box-shadow: 0 0 0 2px var(--uwu-pink), 0 0 18px var(--uwu-glow) !important;
+  }
+  input::placeholder, textarea::placeholder { color: var(--v2-text-text-faint) !important; }
+
+  [data-component=composer] {
+    border-radius: 22px !important;
+    background: var(--v2-background-bg-layer-01) !important;
+    border: 1.5px solid var(--v2-border-border-strong) !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .18), 0 0 0 4px rgba(255, 143, 200, .06) !important;
+    transition: box-shadow .25s, border-color .25s !important;
+  }
+  [data-component=composer]:focus-within {
+    border-color: var(--uwu-pink) !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .18), 0 0 0 4px rgba(255, 143, 200, .18), 0 0 30px var(--uwu-glow) !important;
+  }
+  [data-component=composer]::after {
+    content: "(◕‿◕✿)";
+    position: absolute;
+    right: 56px;
+    bottom: 13px;
+    font: 700 12px/1 var(--uwu-font);
+    color: var(--v2-text-text-faint);
+    pointer-events: none;
+    z-index: 20;
+  }
+  [data-component=composer-editor] { caret-color: var(--uwu-pink) !important; }
+
+  /* ───────────────────────────────── messages ──────────────────────────────── */
+  [data-slot=user-message-text] {
+    background: linear-gradient(135deg, var(--uwu-bubble-a), var(--uwu-bubble-b)) !important;
+    color: var(--uwu-bubble-ink) !important;
+    font-weight: 700 !important;
+    border-radius: 20px 20px 6px 20px !important;
+    padding: 10px 16px !important;
+    box-shadow: 0 6px 18px var(--uwu-glow), inset 0 1px 0 rgba(255, 255, 255, .4) !important;
+    position: relative !important;
+  }
+  [data-slot=user-message-text]::after {
+    content: "♡";
+    position: absolute;
+    right: -8px;
+    bottom: -10px;
+    font-size: 16px;
+    color: var(--uwu-pink);
+    text-shadow: 0 0 8px var(--uwu-glow);
+    animation: uwu-float 2.4s ease-in-out infinite;
+  }
+
+  [data-component=text-part] {
+    background: var(--v2-background-bg-layer-01) !important;
+    border: 1px solid var(--v2-border-border-base) !important;
+    border-radius: 6px 22px 22px 22px !important;
+    padding: 16px 20px 10px !important;
+    position: relative !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .12) !important;
+  }
+  [data-component=text-part]::before {
+    content: "✧ opencode-chan ✧";
+    position: absolute;
+    top: -12px;
+    left: 14px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font: 800 11px/1.4 var(--uwu-font);
+    color: #fff;
+    background: linear-gradient(135deg, var(--uwu-bubble-b), var(--uwu-bubble-a));
+    box-shadow: 0 3px 10px var(--uwu-glow);
+  }
+
+  /* ───────────────────────────────── markdown ──────────────────────────────── */
+  [data-component=markdown] {
+    font-family: var(--uwu-font) !important;
+    line-height: 1.7 !important;
+
+    :is(h1, h2, h3) {
+      font-weight: 800 !important;
+      background: linear-gradient(90deg, var(--uwu-head-a), var(--uwu-head-b)) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+    }
+    :is(h1, h2, h3)::before {
+      content: "✿ ";
+      color: var(--uwu-head-a);
+      -webkit-text-fill-color: var(--uwu-head-a);
+    }
+
+    ul > li::marker { content: "♡  "; color: var(--uwu-pink); font-weight: 800; }
+    ol > li::marker { color: var(--uwu-lavender); font-weight: 800; }
+
+    strong { color: var(--v2-text-text-accent) !important; font-weight: 800 !important; }
+    em { color: var(--uwu-em) !important; }
+    a { color: var(--v2-text-text-accent) !important; text-decoration: underline wavy rgba(255, 143, 200, .6) !important; text-underline-offset: 3px !important; }
+
+    :not(pre) > code {
+      background: rgba(255, 143, 200, .14) !important;
+      color: var(--v2-text-text-code-accent) !important;
+      border: 1px solid var(--v2-border-border-base) !important;
+      border-radius: 8px !important;
+      padding: 1px 6px !important;
+      font-family: var(--uwu-mono) !important;
+    }
+
+    blockquote {
+      border: none !important;
+      border-radius: 16px !important;
+      background: linear-gradient(135deg, rgba(255, 143, 200, .12), rgba(199, 162, 255, .12)) !important;
+      padding: 10px 14px 10px 42px !important;
+      position: relative !important;
+      color: var(--v2-text-text-base) !important;
+    }
+    blockquote > :last-child { margin-bottom: 0 !important; }
+    blockquote::before {
+      content: "💌";
+      position: absolute;
+      left: 14px;
+      top: 10px;
+    }
+
+    table {
+      width: auto !important;
+      display: table !important;
+      border-collapse: separate !important;
+      border-spacing: 0 !important;
+      border: 1px solid var(--v2-border-border-base) !important;
+      border-radius: 14px !important;
+      overflow: hidden !important;
+    }
+    th {
+      background: linear-gradient(90deg, rgba(255, 143, 200, .22), rgba(199, 162, 255, .22)) !important;
+      color: var(--v2-text-text-base) !important;
+      font-weight: 800 !important;
+    }
+    :is(th, td) { border-color: var(--v2-border-border-muted) !important; padding: 8px 14px !important; }
+    tr:nth-child(even) td { background: rgba(255, 143, 200, .05) !important; }
+
+    hr { border: none !important; text-align: center !important; height: 1.4em !important; }
+    hr::after { content: "˚ ༘ ♡ ⋆｡˚ ✧ ˚ ༘ ♡ ⋆｡˚"; color: var(--uwu-pink); letter-spacing: .3em; }
+  }
+
+  /* code blocks */
+  [data-component=markdown-code] {
+    border: 1.5px dashed var(--v2-border-border-strong) !important;
+    background: var(--background-stronger) !important;
+    position: relative !important;
+    padding-top: 22px !important;
+    overflow: hidden !important;
+  }
+  [data-component=markdown-code]::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 14px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--uwu-cherry);
+    box-shadow: 15px 0 0 var(--uwu-butter), 30px 0 0 var(--uwu-mint);
+  }
+  [data-component=markdown-code] pre {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    margin: 0 !important;
+  }
+  pre.shiki, pre.shiki code { font-family: var(--uwu-mono) !important; }
+
+  /* ───────────────────────────────── home page ──────────────────────────────── */
+  [data-component=home-session-search] {
+    border: 1.5px solid var(--v2-border-border-base) !important;
+    background: var(--v2-background-bg-layer-01) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .1) !important;
+  }
+
+  [data-component=home-session-search] { position: relative !important; overflow: visible !important; }
+  [data-component=home-session-search]::before {
+    content: "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧  welcome back, cutie! what are we building today?";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 14px);
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font: 800 15px/1 var(--uwu-font);
+    letter-spacing: .02em;
+    background: linear-gradient(90deg, var(--uwu-head-a), var(--uwu-head-b), var(--uwu-mint));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    pointer-events: none;
+  }
+
+  [data-component=home-session-row] {
+    border-radius: 14px !important;
+    transition: transform .25s var(--uwu-bounce), background .2s !important;
+  }
+  [data-component=home-session-row]:hover {
+    background: var(--v2-overlay-simple-overlay-hover) !important;
+    transform: translateX(4px) !important;
+  }
+  [data-component=home-session-row]:hover [data-component=home-session-title]::after {
+    content: " ♡";
+    color: var(--uwu-pink);
+  }
+
+  [data-component=project-avatar-v2] [data-slot=project-avatar-surface] {
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, var(--uwu-bubble-a), var(--uwu-bubble-b)) !important;
+    color: #fff !important;
+  }
+
+  /* ───────────────────────────────── dialogs ───────────────────────────────── */
+  [data-component=dialog-v2], [data-slot=dialog-content] {
+    border-radius: 24px !important;
+  }
+  [data-slot=dialog-header] {
+    background: linear-gradient(90deg, rgba(255, 143, 200, .16), rgba(199, 162, 255, .14)) !important;
+  }
+  [data-slot=dialog-title]::before { content: "✧ "; color: var(--uwu-pink); }
+  [data-slot=dialog-title]::after { content: " ✧"; color: var(--uwu-lavender); }
+
+  /* menus, popovers & tooltips */
+  :is([role=menu], [role=listbox], [data-component$=popover], [data-component$=-content]) {
+    border-radius: 16px !important;
+  }
+  [role=tooltip] {
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, var(--uwu-bubble-a), var(--uwu-bubble-b)) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+  }
+  :is([role=menuitem], [role=option]) { border-radius: 10px !important; }
+
+  /* ─────────────────────────────── mascot ─────────────────────────────── */
+  body::after {
+    content: "🌸 uwu mode ♡";
+    position: fixed;
+    right: 26px;
+    bottom: 20px;
+    z-index: 5;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font: 800 13px/1 var(--uwu-font);
+    color: var(--v2-text-text-accent);
+    background: var(--v2-background-bg-layer-02);
+    box-shadow: 0 0 0 1px var(--v2-border-border-base), 0 6px 18px var(--uwu-glow);
+    pointer-events: none;
+    animation: uwu-bob 3s ease-in-out infinite;
+  }
+  @media (max-width: 1280px) { body::after { display: none; } }
+
+  /* ─────────────────────────────── animations ─────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+}
+
+@keyframes uwu-float {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-5px) rotate(8deg); }
+}
+
+@keyframes uwu-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
