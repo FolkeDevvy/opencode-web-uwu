@@ -201,14 +201,26 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
   /* ─────────────── activity bar: a floating dock of custom icons ─────────────── */
   .part.activitybar {
     background: transparent !important;
+    /* drop VS Code's own frame so only our floating pill shows */
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    z-index: 2;
     .content {
-      background: linear-gradient(180deg, #ff8fc826, #c7a2ff1f 50%, #8ff5cf14), var(--k-card);
-      border: 1.5px solid var(--k-line);
+      /* pinned inside the activity-bar column, with a clear gap before the side bar */
+      position: absolute !important;
+      inset: 8px 6px 8px 4px;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 !important;
+      background: linear-gradient(180deg, #ff8fc826, #c7a2ff1f 50%, #8ff5cf14), var(--k-card-solid);
+      border: 1.5px solid var(--k-line-strong);
       border-radius: 22px;
-      margin: 8px 4px;
-      height: calc(100% - 16px) !important;
-      box-shadow: var(--k-shadow);
+      box-shadow: 0 8px 22px #0a000f55, 0 0 18px var(--k-glow);
     }
+    .composite-bar, .monaco-action-bar, .actions-container, .menubar { width: 100% !important; }
+    .action-item { display: flex !important; justify-content: center; }
     .action-item {
       transition: transform .3s var(--k-bounce);
       animation: uwu-pop .6s var(--k-bounce) both;
@@ -219,9 +231,14 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
     .action-item:nth-child(5) { animation-delay: .24s; }
     .action-item:hover { transform: translateY(-2px) scale(1.12) rotate(-6deg); }
     .action-item .action-label {
-      border-radius: 14px !important;
+      /* a bubble that fits inside the pill */
+      width: 30px !important;
+      height: 30px !important;
+      margin: 3px 0 !important;
+      border-radius: 12px !important;
       color: var(--k-muted) !important;
     }
+    .action-item .action-label::before { width: 22px !important; height: 22px !important; -webkit-mask-size: 22px !important; mask-size: 22px !important; }
     .action-item.checked .action-label {
       color: var(--k-ink) !important;
       background: linear-gradient(135deg, var(--k-pink), var(--k-lav)) !important;

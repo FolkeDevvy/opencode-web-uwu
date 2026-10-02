@@ -65,11 +65,11 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 ## Install
 
 ```sh
-code --install-extension vscode/uwu-code-0.2.0.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.2.1.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.2.0.vsix`](uwu-code-0.2.0.vsix).
+[`uwu-code-0.2.1.vsix`](uwu-code-0.2.1.vsix).
 
 Then do the following:
 1. `Ctrl+K Ctrl+T` → **uwu strawberry-milk night** or **uwu sakura cream day**
@@ -102,5 +102,5 @@ The [extension README](uwu-code/README.md) has every detail.
 python3 tools/vscode_theme.py      # colour themes from tools/palette.py
 python3 tools/petals.py            # petal tiles (shared with the web theme)
 python3 tools/kawaii_assets.py     # Kawaii Workbench icons/mascot + the uwu cuties file icons
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.2.0.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.2.1.vsix
 ```

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Kawaii Workbench: the activity-bar dock is now a clean floating pill. VS Code's own frame behind
+  it is gone, there's a gap before the side bar, and the active icon bubble fits inside the pill.
+
 ## 0.2.0
 
 - **Kawaii Workbench** (opt-in: `uwu: Enable Kawaii Workbench`) turns VS Code into uwu IDE:
