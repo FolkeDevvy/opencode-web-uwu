@@ -14,6 +14,16 @@ if [ -e "$OVERLAY" ] && [ ! -f "$OVERLAY/.uwu-lockscreen" ]; then
     exit 1
 fi
 
+# the lock screen lives in Plasma's desktop shell package since 6.1
+SHELL_FOUND=""
+IFS=: ; for d in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share}; do
+    [ -f "$d/plasma/shells/org.kde.plasma.desktop/contents/lockscreen/LockScreen.qml" ] && SHELL_FOUND="$d" && break
+done; unset IFS
+if [ -z "$SHELL_FOUND" ]; then
+    echo "✗ Plasma's desktop shell (Plasma 6.1 or newer) isn't installed, so there's nothing to theme."
+    exit 1
+fi
+
 echo "♡ installing the uwu lock screen…"
 mkdir -p "$DEST"
 rm -rf "$DEST/lockscreen"

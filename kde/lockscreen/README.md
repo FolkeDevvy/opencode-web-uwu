@@ -41,6 +41,8 @@ Mixed setups work too, for example a normal monitor next to a rotated one.
 
 ## Install
 
+> **Quick way:** `./uwu.sh install lockscreen` from the repo root.
+
 ```sh
 git clone https://github.com/folkedevvy/opencode-web-uwu.git
 cd opencode-web-uwu/kde/lockscreen

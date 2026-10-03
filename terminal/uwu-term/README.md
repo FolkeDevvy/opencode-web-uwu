@@ -34,6 +34,9 @@ It's loaded automatically, and your own `~/.bashrc` / `~/.zshrc` / fish config s
 
 ## Install on Arch
 
+> **Quick way (any distro, no root):** `./uwu.sh install term` from the repo root. It builds uwu-term
+> into `~/.local/share` and adds it to your app launcher.
+
 ```sh
 git clone https://github.com/folkedevvy/opencode-web-uwu.git
 cd opencode-web-uwu/terminal/uwu-term/packaging/arch

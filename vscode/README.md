@@ -64,6 +64,8 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 
 ## Install
 
+> **Quick way:** `./uwu.sh install vscode` from the repo root.
+
 ```sh
 code --install-extension vscode/uwu-code-0.2.1.vsix   # from the repo root
 ```

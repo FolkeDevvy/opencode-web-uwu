@@ -16,6 +16,8 @@ variants:
 
 ## Install
 
+> **Quick way:** `./uwu.sh install tui` from the repo root.
+
 1. Copy the theme files into your opencode config's `themes` folder (on macOS and Linux that's
    `~/.config/opencode/themes/`):
 

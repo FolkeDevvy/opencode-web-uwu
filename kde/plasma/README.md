@@ -31,6 +31,8 @@ wallpaper and the splash screen while you log in. It's the same pastel family as
 
 ## Install
 
+> **Quick way:** `./uwu.sh install plasma` (or `--day`) from the repo root.
+
 Needs Plasma 6.
 
 ```sh

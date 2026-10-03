@@ -33,6 +33,9 @@ super duper kawaii, with falling sakura included. No extensions needed.
 
 ## Install (Firefox)
 
+> **Quick way:** `./uwu.sh install web` from the repo root does all of this (for every Firefox profile), and
+> `./uwu.sh uninstall web` takes it back out.
+
 1. Open `about:config`, then set
    `toolkit.legacyUserProfileCustomizations.stylesheets` → `true`.
 2. Open `about:profiles`. Under the profile you use, click **Open Directory**

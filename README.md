@@ -8,6 +8,52 @@ day), with falling sakura wherever we can get away with it.
 **▶ [Watch the showcase](showcase/uwu-showcase.mp4)**: everything below working together, from boot splash to lock
 screen (1080p60).
 
+## Install
+
+One script installs and removes everything. Pick what you want from a menu:
+
+```sh
+git clone https://github.com/folkedevvy/opencode-web-uwu.git
+cd opencode-web-uwu
+./uwu.sh
+```
+
+```
+  ♡ uwu ✧ kawaii everything installer
+
+  [♥]  1  opencode web         ✓ installed
+  [ ]  2  opencode TUI         ·
+  [♥]  3  uwu IDE (VS Code)    ·
+  ...
+  1-6 pick · a all · n none · i install · u uninstall · d Plasma day/night · q quit
+```
+
+Or say it directly:
+
+```sh
+./uwu.sh install web tui vscode     # just these
+./uwu.sh install all                # everything
+./uwu.sh install plasma --day       # the Plasma theme in uwu day
+./uwu.sh uninstall lockscreen       # take one back out
+./uwu.sh status                     # what's installed
+```
+
+| Name | What | Needs |
+| --- | --- | --- |
+| `web` | opencode web theme, added to every Firefox profile | Firefox |
+| `tui` | opencode TUI themes, set as your theme | |
+| `vscode` | the uwu IDE extension | VS Code, Code - OSS or VSCodium |
+| `term` | uwu-term, in your app launcher | npm and build tools (Arch: `base-devel`); uses Arch's `electron` if installed |
+| `plasma` | the whole Plasma desktop theme | KDE Plasma 6 |
+| `lockscreen` | the lock screen | KDE Plasma 6.1+ |
+
+Everything installs per user (no root). Uninstalling only removes what the installer added:
+- Your own `userContent.css` and `user.js` lines stay.
+- Your previous opencode theme is restored.
+- Your previous Plasma look is restored.
+
+Each section's README also explains how to install it by hand.
+
 ## What's inside
 
 | | | |
@@ -22,6 +68,7 @@ screen (1080p60).
 ## Repo layout
 
 ```
+uwu.sh          one installer for everything (./uwu.sh)
 opencode/
   web/          Firefox userContent.css for the opencode web UI
   tui/          opencode TUI themes
@@ -46,7 +93,7 @@ tools/          generators shared by everything above
   plasma_extras.py draws the sakura wallpaper, splash screen and global themes
 ```
 
-Each section has its own README with install steps and screenshots.
+Each section has its own README with screenshots and manual install steps.
 
 | opencode web | opencode TUI |
 | --- | --- |
