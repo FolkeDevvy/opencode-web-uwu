@@ -528,6 +528,7 @@ class Show:
             ang = 90 * q
             fit = lerp(1.0, H / W, q)
             p.save()
+            p.setOpacity(1 - ease((t - 1.6) / 0.6))   # hands over to the real portrait desktop
             p.translate(W / 2, H / 2)
             p.rotate(ang)
             p.scale(fit, fit)
@@ -568,11 +569,11 @@ class Show:
             p.drawImage(0, 0, self._full("night", T))
             k.caption(p, "Meta + L", "", ease_out((t - 0.2) / 0.4))
 
-        @self.seg("lock", 14.6, xfade=0.6)
+        @self.seg("lock", 11.0, xfade=0.6)
         def lock(p, t, T):
             c = self.clip("lock", CLIPS / "q-lock.mp4", W, H)
             p.drawImage(0, 0, c.frame(int(t * FPS)))
-            k.caption(p, "⑧ lock screen", "sleepy bunny · heart password · wrong one pouts", ease_out((t - 0.5) / 0.6) - ease((t - 13.6) / 0.4))
+            k.caption(p, "⑧ lock screen", "sleepy bunny · heart password · wrong one pouts", ease_out((t - 0.5) / 0.6) - ease((t - 9.9) / 0.4))
 
         @self.seg("unlock", 2.4, xfade=0.5)
         def unlock(p, t, T):

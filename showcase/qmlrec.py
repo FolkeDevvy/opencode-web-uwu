@@ -34,8 +34,25 @@ v.setGeometry(0, 0, W, H); v.show()
 root = v.rootObject()
 for item in filter(None, a.stages.split(",")):      # "ms:stage"
     ms, st = item.split(":"); QTimer.singleShot(int(ms), lambda st=int(st): root.setProperty("stage", st))
+def run_script(script):
+    """Like the preview's runner, but every keystroke gets an absolute time, so a slow
+    frame grab can never reorder typing and Enter."""
+    t = 0
+    for step in filter(None, (x.strip() for x in script.split(";"))):
+        cmd, _, arg = step.partition(" ")
+        if cmd == "wait":
+            t += int(arg)
+        elif cmd == "type":
+            for ch in arg:
+                QTimer.singleShot(t, lambda ch=ch: lp.press(v, ord(ch.upper()) if ch.isalnum() else 0, ch))
+                t += 90
+        elif cmd == "enter":
+            QTimer.singleShot(t, lambda: lp.press(v, Qt.Key_Return, "\r"))
+            t += 10
+
+
 if a.script:
-    lp.run_script(v, a.script, app)
+    run_script(a.script)
 ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r", "60",
                        "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "12", "-pix_fmt", "yuv444p", a.out], stdin=subprocess.PIPE)
 total = int(a.seconds * 60); n = 0; t0 = time.monotonic()

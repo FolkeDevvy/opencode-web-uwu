@@ -32,7 +32,7 @@ Plasma itself wasn't running: the desktop shell is drawn from the theme's real f
 Needs PySide6, ffmpeg and libfaketime (`pip install PySide6 libfaketime`).
 
 ```sh
-# 1. record the QML scenes. libfaketime slows the clock 20x, so every frame is exact
+# 1. record the QML scenes. libfaketime slows the clock, so every frame is exact
 FT=$(python3 -c "import libfaketime, os; print(os.path.join(os.path.dirname(libfaketime.__file__), 'vendor/libfaketime/src/libfaketime.so.1'))")
 export LD_PRELOAD=$FT QT_QPA_PLATFORM=offscreen
 L=../kde/lockscreen/lockscreen/LockScreen.qml
