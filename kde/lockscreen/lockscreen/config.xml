@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ♡ uwu lock screen settings (System Settings → Screen Locking → Appearance) -->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name=""/>
+
+  <group name="General">
+    <entry name="theme" type="String">
+      <label>Colours: "night" (strawberry-milk night) or "day" (sakura cream)</label>
+      <default>night</default>
+    </entry>
+    <entry name="useWallpaper" type="Bool">
+      <label>Show the lock screen wallpaper under a pastel tint instead of the gradient.</label>
+      <default>false</default>
+    </entry>
+    <entry name="petals" type="Bool">
+      <label>Falling sakura petals.</label>
+      <default>true</default>
+    </entry>
+    <entry name="petalCount" type="Int">
+      <label>How many petals.</label>
+      <default>40</default>
+      <min>0</min>
+      <max>120</max>
+    </entry>
+    <entry name="reduceMotion" type="Bool">
+      <label>Calm mode: no petals or drifting background.</label>
+      <default>false</default>
+    </entry>
+  </group>
+</kcfg>
