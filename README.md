@@ -5,6 +5,9 @@ day), with falling sakura wherever we can get away with it.
 
 ![sakura petals falling in the wind](opencode/web/screenshots/uwu-demo.gif)
 
+**▶ [Watch the showcase](showcase/uwu-showcase.mp4)**: everything below working together, from boot splash to lock
+screen (1080p60).
+
 ## What's inside
 
 | | | |
@@ -31,6 +34,7 @@ kde/
 terminal/
   uwu-term/     the kawaii terminal emulator (Electron + xterm.js)
     packaging/arch/  PKGBUILD for makepkg -si
+showcase/       the all-in-one video and the scripts that make it
 tools/          generators shared by everything above
   palette.py      the shared colour palette
   petals.py       falling-sakura SVG tiles (web + VS Code)
