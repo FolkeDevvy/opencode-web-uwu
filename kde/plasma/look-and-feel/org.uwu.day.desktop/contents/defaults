@@ -1,0 +1,17 @@
+# ♡ uwu day: what applying this global theme changes
+[kdeglobals][General]
+ColorScheme=UwuDay
+
+[plasmarc][Theme]
+name=uwu
+
+[Wallpaper]
+Image=uwu-sakura
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__uwu-day
+
+[ksplashrc][KSplash]
+Engine=KSplashQML
+Theme=org.uwu.day.desktop

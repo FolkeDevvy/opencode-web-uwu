@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "uwu"
+            }
+        ],
+        "Category": "",
+        "Description": "Strawberry-milk night: candy panels, pastel windows, sakura wallpaper and a hopping bunny ♡",
+        "Id": "org.uwu.night.desktop",
+        "License": "MIT",
+        "Name": "uwu night",
+        "Website": "https://github.com/folkedevvy/opencode-web-uwu"
+    },
+    "Keywords": "Desktop;Workspace;Appearance;Look and Feel;kawaii;uwu;sakura;pastel;"
+}

@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "uwu"
+            }
+        ],
+        "Id": "uwu-sakura",
+        "License": "MIT",
+        "Name": "uwu sakura"
+    },
+    "X-KDE-PlasmaImageWallpaper-AccentColor": "#ff8fc8"
+}

@@ -1,0 +1,17 @@
+# ♡ uwu night: what applying this global theme changes
+[kdeglobals][General]
+ColorScheme=UwuNight
+
+[plasmarc][Theme]
+name=uwu
+
+[Wallpaper]
+Image=uwu-sakura
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__uwu-night
+
+[ksplashrc][KSplash]
+Engine=KSplashQML
+Theme=org.uwu.night.desktop

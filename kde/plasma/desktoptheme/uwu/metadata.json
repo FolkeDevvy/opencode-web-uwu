@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Authors": [{ "Name": "uwu" }],
+        "Category": "",
+        "Description": "Candy pastel panels, popups and taskbar with sakura vibes ♡ (colours follow your colour scheme: try uwu night / uwu day)",
+        "EnabledByDefault": true,
+        "Id": "uwu",
+        "License": "MIT",
+        "Name": "uwu",
+        "Version": "1.0",
+        "Website": "https://github.com/folkedevvy/opencode-web-uwu"
+    },
+    "X-Plasma-API": "5.0"
+}
