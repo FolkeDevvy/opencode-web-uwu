@@ -14,6 +14,13 @@ animating CSS background-position matters: browsers re-rasterise huge
 repeating SVG backgrounds when their position animates, which made the
 petals visibly hitch every second or so.
 
+The opencode web theme no longer uses these animated tiles: SMIL animation
+inside a CSS background makes Firefox re-rasterise the whole layer on the
+main thread every frame, which made the page crawl. It uses static_tile()
+instead: still pictures of petals, moved by compositor-only CSS transform
+animations (see the petals section of userContent.css). VS Code keeps the
+animated tiles.
+
     python3 tools/petals.py   # rewrites the PETALS block in userContent.css
                               # and vscode/uwu-code/petals.js
 """
@@ -112,21 +119,72 @@ def tile(seed, w, h, count, scale, period, colors, opacity, blur=0, wind_tiles=1
     return 'url("data:image/svg+xml,' + urllib.parse.quote(svg, safe=" =:/;,.-_()'\"") .replace('"', "'") + '")'
 
 
+def static_tile(seed, w, h, count, scale, colors, opacity, blur=0):
+    """A still picture of petals, scattered and tumbled, that tiles seamlessly.
+
+    Petals near an edge are drawn again on the opposite side, so they flow over
+    tile seams. Nothing in here animates: the CSS slides the whole layer with a
+    transform, which the compositor does without repainting anything. Blur is
+    fine here, as it's only rasterised once.
+    """
+    rnd = random.Random(seed)
+    defs = [
+        f'<radialGradient id="g{i}" cx=".5" cy=".7" r=".8">'
+        f'<stop offset="0" stop-color="{inner}"/><stop offset="1" stop-color="{outer}"/>'
+        "</radialGradient>"
+        for i, (inner, outer) in enumerate(colors)
+    ]
+    if blur:
+        defs.append(
+            f'<filter id="b" x="-60%" y="-60%" width="220%" height="220%">'
+            f'<feGaussianBlur stdDeviation="{blur}"/></filter>'
+        )
+    vein = f'<path d="{VEIN}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".9" stroke-linecap="round"/>'
+    defs.append(f'<g id="p"><path d="{PETAL}"/>{vein}</g>')
+    # spread petals on a jittered grid so they never clump
+    cols = max(1, round((count * w / h) ** 0.5))
+    rows = max(1, -(-count // cols))
+    cells = [(c, r) for r in range(rows) for c in range(cols)]
+    rnd.shuffle(cells)
+    petals = []
+    for c, r in cells[:count]:
+        x = (c + rnd.uniform(0.15, 0.85)) * w / cols
+        y = (r + rnd.uniform(0.15, 0.85)) * h / rows
+        s = rnd.uniform(*scale)
+        rot = rnd.uniform(0, 360)
+        flip = rnd.uniform(0.35, 1.0)    # a petal seen edge-on, mid-tumble
+        g = rnd.randrange(len(colors))
+        filt = ' filter="url(#b)"' if blur else ""
+        body = (f'<g transform="rotate({rot:.0f}) scale({s * flip:.2f} {s:.2f})"{filt}>'
+                f'<use href="#p" fill="url(#g{g})"/></g>')
+        reach = 14 * s + 3 * blur + 4
+        for dx in (-w, 0, w):
+            for dy in (-h, 0, h):
+                px, py = x + dx, y + dy
+                if -reach < px < w + reach and -reach < py < h + reach:
+                    petals.append(f'<g transform="translate({px:.1f} {py:.1f})">{body}</g>')
+    svg = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">'
+        f"<defs>{''.join(defs)}</defs><g opacity=\"{opacity}\">{''.join(petals)}</g></svg>"
+    )
+    return 'url("data:image/svg+xml,' + urllib.parse.quote(svg, safe=" =:/;,.-_()'\"") .replace('"', "'") + '")'
+
+
 PINKS = [("#ffe6f1", "#ff8fc2"), ("#ffd4e7", "#f9679f"), ("#fff0f6", "#ffa9cf"), ("#ffc9e0", "#ef5d97")]
 
+# The web theme's layers. Tile sizes all divide 1000px: the CSS slides each layer
+# down by exactly 1000px per loop, so every layer wraps seamlessly.
 LAYERS = {
-    # front: a few big, soft, out-of-focus petals drifting closest to the "camera"
-    # (still behind the UI; it is just the top background layer)
-    "--uwu-petals-front": tile(99, 1400, 1100, 4, (3.4, 4.6), (9, 12), PINKS, .62, blur=1.1, wind_tiles=2),
-    # far: small, pale, slow
-    "--uwu-petals-far": tile(7, 610, 700, 10, (.7, 1.0), (16, 24), PINKS, .6),
-    # near: bigger, brighter, a bit quicker
-    "--uwu-petals-near": tile(42, 1010, 900, 7, (1.3, 1.9), (10, 15), PINKS, .92, wind_tiles=2),
+    # front: a few big, soft, out-of-focus petals
+    "--uwu-petals-front": static_tile(99, 1000, 1000, 3, (3.4, 4.6), PINKS, .62, blur=1.1),
+    # near: bigger, brighter
+    "--uwu-petals-near": static_tile(42, 1000, 1000, 9, (1.3, 1.9), PINKS, .92),
+    # far: small and pale
+    "--uwu-petals-far": static_tile(7, 500, 500, 7, (.7, 1.0), PINKS, .6),
 }
 
-
 # background-image stacking order (first = on top) and tile sizes
-ORDER = [("--uwu-petals-front", 1400, 1100), ("--uwu-petals-near", 1010, 900), ("--uwu-petals-far", 610, 700)]
+ORDER = [("--uwu-petals-front", 1000, 1000), ("--uwu-petals-near", 1000, 1000), ("--uwu-petals-far", 500, 500)]
 
 
 # The editor repaints these every frame on the CPU, so VS Code gets a front
