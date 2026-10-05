@@ -1,8 +1,8 @@
 {
   "name": "uwu-code",
   "displayName": "uwu-code",
-  "description": "Turns VS Code into a kawaii IDE: pastel themes and file icons, sakura petals, a full window makeover with splash screen, mascot, sparkles and confetti ♡",
-  "version": "0.3.0",
+  "description": "Turns VS Code into a kawaii IDE: pastel themes and file icons, a full window makeover with splash screen, mascot, sparkles and confetti ♡",
+  "version": "0.4.0",
   "publisher": "folkedevvy",
   "icon": "media/icon.png",
   "repository": {
@@ -43,11 +43,6 @@
     ],
     "commands": [
       {
-        "command": "uwu.togglePetals",
-        "title": "Toggle Sakura Petals",
-        "category": "uwu"
-      },
-      {
         "command": "uwu.sparkle",
         "title": "Sparkle! ✧",
         "category": "uwu"
@@ -71,59 +66,6 @@
     "configuration": {
       "title": "uwu-code",
       "properties": {
-        "uwu.petals.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show sakura petals drifting behind the code in the editor."
-        },
-        "uwu.petals.style": {
-          "type": "string",
-          "enum": [
-            "light",
-            "classic"
-          ],
-          "enumDescriptions": [
-            "Still petal pictures that slide down on a breeze. Nearly free. They move when the Kawaii Workbench is on; without it they stay still.",
-            "Self-animating petals that fall, spin and flip, with or without the Kawaii Workbench. Uses a lot more CPU."
-          ],
-          "default": "light",
-          "description": "How the petals in the editor are drawn."
-        },
-        "uwu.petals.opacity": {
-          "type": "number",
-          "default": 0.7,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "How visible the petals are (0 = invisible, 1 = full)."
-        },
-        "uwu.petals.area": {
-          "type": "string",
-          "enum": [
-            "edges",
-            "everywhere"
-          ],
-          "enumDescriptions": [
-            "Keep the petals out of the code: invisible over the first ~24 text columns, fading in to full strength past ~72 columns (default)",
-            "Petals across the whole editor, behind the code too"
-          ],
-          "default": "edges",
-          "description": "Where the petals show up in the editor."
-        },
-        "uwu.petals.layers": {
-          "type": "string",
-          "enum": [
-            "all",
-            "noFront",
-            "far"
-          ],
-          "enumDescriptions": [
-            "All three layers, including big soft petals up front (heavier: costs some frame rate on slower machines)",
-            "Near and far petals (default, smooth everywhere)",
-            "Only the small, slow far-away petals (subtlest and lightest)"
-          ],
-          "default": "noFront",
-          "description": "Which petal layers to draw."
-        },
         "uwu.sparkleOnSave": {
           "type": "boolean",
           "default": true,

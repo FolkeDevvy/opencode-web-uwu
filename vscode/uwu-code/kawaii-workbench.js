@@ -45,6 +45,18 @@ function inject(html) {
 
 const isPatched = (appRoot) => fs.readFileSync(locate(appRoot).html, 'utf8').includes(START);
 
+/** True when the copy inside VS Code matches this extension's workbench files (false after an uwu-code update). */
+function isCurrent(appRoot, sourceDir) {
+  const target = path.join(locate(appRoot).htmlDir, DIR);
+  const same = (from, to) => fs.readdirSync(from, { withFileTypes: true }).every((e) => {
+    const a = path.join(from, e.name);
+    const b = path.join(to, e.name);
+    if (e.isDirectory()) return fs.existsSync(b) && same(a, b);
+    return fs.existsSync(b) && fs.readFileSync(a).equals(fs.readFileSync(b));
+  });
+  return same(sourceDir, target);
+}
+
 function productWith(productText, key, html) {
   const product = JSON.parse(productText);
   if (product.checksums && key in product.checksums) product.checksums[key] = checksum(html);
@@ -119,4 +131,4 @@ function stage(p, stagingDir) {
   return script;
 }
 
-module.exports = { locate, isPatched, plan, apply, stage, inject, strip, checksum, START };
+module.exports = { locate, isPatched, isCurrent, plan, apply, stage, inject, strip, checksum, START };

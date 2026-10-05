@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+- **The falling sakura petals are gone,** from both the editor and the Kawaii Workbench window.
+  They were more distracting than cute. The *Toggle Sakura Petals* command and the
+  `uwu.petals.*` settings are removed; leftover settings are ignored.
+- Clicking the status-bar mascot now gives you a sparkle burst.
+- After an uwu-code update, you're offered to re-apply the Kawaii Workbench, so VS Code picks up
+  the new look (here: the window without petals).
+- Kawaii Workbench: the Reduce Motion calm mode actually works now. The old rule used
+  pseudo-elements inside `:is()`, which is invalid, so the browser ignored it.
+
 ## 0.3.0
 
 - **Much lighter petals.** They're now still pictures on one layer that slides with a GPU

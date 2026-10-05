@@ -1,14 +1,13 @@
 // ♡ uwu-code ✧ kawaii effects for the VS Code editor.
 //
-// Everything visual here is built from the editor decoration API. The petals
-// and sparkle bursts use the well-known `textDecoration` trick: VS Code puts
+// Everything visual here is built from the editor decoration API. The sparkle
+// bursts use the well-known `textDecoration` trick: VS Code puts
 // that value straight into the decoration's CSS rule, so extra declarations
 // after "none;" let a decoration's ::before/::after become a free-floating,
 // click-through layer. It is unofficial, so every effect can be switched off.
 
 const vscode = require('vscode');
 const path = require('path');
-const petalLayers = require('./petals');
 const kawaii = require('./kawaii-workbench');
 
 const KAOMOJI = {
@@ -23,17 +22,13 @@ const cfg = () => vscode.workspace.getConfiguration('uwu');
 
 /** @param {vscode.ExtensionContext} context */
 function activate(context) {
-  const petals = new Petals();
   const hearts = new GutterHearts(context);
   const kaomoji = new ErrorKaomoji();
   const mascot = new Mascot();
   const bridge = new Bridge();
-  context.subscriptions.push(petals, hearts, kaomoji, mascot, bridge);
+  context.subscriptions.push(hearts, kaomoji, mascot, bridge);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('uwu.togglePetals', () => {
-      cfg().update('petals.enabled', !cfg().get('petals.enabled'), vscode.ConfigurationTarget.Global);
-    }),
     vscode.commands.registerCommand('uwu.sparkle', () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) burst(editor);
@@ -50,7 +45,6 @@ function activate(context) {
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (!e.affectsConfiguration('uwu')) return;
-      petals.rebuild();
       hearts.refreshAll();
       kaomoji.refreshAll();
       mascot.refresh();
@@ -190,153 +184,22 @@ async function applySettings(context, enable) {
 /** After a VS Code update the patch is gone; offer to put it back. */
 async function checkKawaiiAfterUpdate(context) {
   if (!context.globalState.get(ENABLED_KEY)) return;
+  let message;
   try {
-    if (kawaii.isPatched(vscode.env.appRoot)) return;
+    if (!kawaii.isPatched(vscode.env.appRoot)) {
+      message = 'uwu: VS Code was updated, so the Kawaii Workbench needs to be re-applied ✿';
+    } else if (!kawaii.isCurrent(vscode.env.appRoot, path.join(context.extensionPath, 'workbench'))) {
+      message = 'uwu: uwu-code was updated. Re-apply the Kawaii Workbench to get the new look ✿';
+    } else return;
   } catch {
     return;
   }
   const pick = await vscode.window.showInformationMessage(
-    'uwu: VS Code was updated, so the Kawaii Workbench needs to be re-applied ✿',
+    message,
     'Re-apply',
     'Not now',
   );
   if (pick === 'Re-apply') setKawaii(context, true);
-}
-
-// ─────────────────────────────── sakura petals ───────────────────────────────
-
-// How the petals work: one decoration's ::before becomes a single big layer
-// behind the text (click-through) that is attached to the *document*, like
-// wallpaper: it is anchored to a line near the middle of the view and shifted
-// up by that many line heights (CSS `lh`), so wherever it is anchored the
-// petals land on exactly the same spot in the document. Re-anchoring while you
-// scroll therefore never moves a single petal, and because the anchor sits half
-// a screen from either edge it can't scroll out of view (and vanish) before the
-// update arrives.
-//
-// Motion: with the default "light" style the petal pictures are still, and the
-// whole layer slides down (and sways) with the uwu-editor-fall / uwu-editor-breeze
-// CSS animations, which the GPU compositor runs without repainting anything.
-// Those keyframes live in the Kawaii Workbench stylesheet (an extension can't
-// add @keyframes through the decoration API), so without the workbench the
-// petals simply stay still. The "classic" style uses self-animating SVGs
-// instead: they move everywhere, but the editor repaints them every frame,
-// which costs a lot of CPU.
-const SPAN = 120; // lines the layer reaches above and below its anchor
-const FALL = 1000; // px the layer slides per loop (a multiple of every light tile's height)
-
-class Petals {
-  constructor() {
-    this.type = undefined;
-    /** @type {WeakMap<vscode.TextEditor, number>} last anchor per editor */
-    this.anchors = new WeakMap();
-    this.disposables = [
-      vscode.window.onDidChangeVisibleTextEditors(() => this.applyAll()),
-      vscode.window.onDidChangeTextEditorVisibleRanges((e) => this.apply(e.textEditor)),
-      vscode.window.onDidChangeActiveColorTheme(() => this.rebuild()),
-      vscode.workspace.onDidChangeTextDocument((e) => {
-        for (const ed of vscode.window.visibleTextEditors) if (ed.document === e.document) this.apply(ed, true);
-      }),
-    ];
-    this.rebuild();
-  }
-
-  rebuild() {
-    if (this.type) this.type.dispose();
-    this.type = undefined;
-    this.anchors = new WeakMap();
-    if (cfg().get('petals.enabled')) {
-      const which = cfg().get('petals.layers');
-      this.classic = cfg().get('petals.style') === 'classic';
-      const all = this.classic ? petalLayers.classic : petalLayers.light;
-      const layers = which === 'far' ? all.slice(2) : which === 'noFront' ? all.slice(1) : all;
-      // pale petals almost vanish on a light background, so give them a boost there
-      const kind = vscode.window.activeColorTheme.kind;
-      const light = kind === vscode.ColorThemeKind.Light || kind === vscode.ColorThemeKind.HighContrastLight;
-      const base = Math.max(0, Math.min(1, Number(cfg().get('petals.opacity')) || 0));
-      const opacity = light ? Math.min(1, base * 1.3) : base;
-      // "edges": keep the petals out of the code. Measured in text columns (ch),
-      // they're invisible over the first ~24 columns, fade in by ~48 and are at
-      // full strength past ~72, where lines usually end.
-      const mask =
-        cfg().get('petals.area') === 'everywhere'
-          ? 'none'
-          : 'linear-gradient(to right, transparent 0, transparent 24ch, rgba(0,0,0,.35) 48ch, black 72ch)';
-      // the heavy part lives once in the decoration type; each anchor only
-      // changes top / height / background-position (see apply)
-      const shared = [
-        'none',
-        'position: absolute',
-        'left: 0',
-        'width: 100vw',
-        'z-index: -1',
-        'pointer-events: none',
-        `opacity: ${opacity}`,
-        `background-image: ${layers.map((l) => l.url).join(', ')}`,
-        `background-size: ${layers.map((l) => `${l.width}px ${l.height}px`).join(', ')}`,
-        'background-repeat: repeat',
-        `-webkit-mask-image: ${mask}`,
-        `mask-image: ${mask}`,
-        ...(this.classic ? [] : [
-          'will-change: transform',
-          'animation: uwu-editor-fall 24s linear infinite, uwu-editor-breeze 13s ease-in-out infinite alternate',
-        ]),
-      ].join('; ');
-      this.layerCount = layers.length;
-      this.type = vscode.window.createTextEditorDecorationType({
-        before: { contentText: '\u200b', textDecoration: shared },
-        rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-      });
-    }
-    this.applyAll();
-  }
-
-  applyAll() {
-    for (const ed of vscode.window.visibleTextEditors) this.apply(ed, true);
-  }
-
-  /**
-   * @param {vscode.TextEditor} editor
-   * @param {boolean} [force] re-apply even if the anchor didn't change
-   */
-  apply(editor, force) {
-    if (!this.type || editor.document.uri.scheme === 'output') return;
-    const lineCount = editor.document.lineCount;
-    const vis = editor.visibleRanges;
-    const top = vis.length ? vis[0].start.line : 0;
-    const bottom = vis.length ? vis[vis.length - 1].end.line : 0;
-    const anchor = Math.min(lineCount - 1, Math.floor((top + bottom) / 2));
-    const prev = this.anchors.get(editor);
-    if (!force && prev !== undefined) {
-      // Every re-anchor repaints the whole petal layer, so only do it when the
-      // view gets near the layer's edge (it reaches SPAN lines either way).
-      const margin = Math.max(20, bottom - top);
-      if (prev === anchor || (top >= prev - SPAN + margin && bottom <= prev + SPAN - margin)) return;
-    }
-    this.anchors.set(editor, anchor);
-    // the layer starts `above` lines over the anchor; its background is shifted
-    // by the line it starts on, which keeps every petal glued to the document
-    const above = Math.min(anchor, SPAN);
-    const start = anchor - above;
-    const pos = `0 calc(${-start} * 1lh)`;
-    // light: one extra loop of height above, so the sliding layer never shows its top edge
-    const extra = this.classic ? 0 : FALL;
-    const css = [
-      'none',
-      `top: calc(${-above} * 1lh - ${extra}px)`,
-      // reach SPAN lines below the anchor, and past the end of a short file
-      `height: calc(${above + SPAN} * 1lh + 100vh + ${extra}px)`,
-      `background-position: ${Array(this.layerCount).fill(pos).join(', ')}`,
-    ].join('; ');
-    editor.setDecorations(this.type, [
-      { range: new vscode.Range(anchor, 0, anchor, 0), renderOptions: { before: { contentText: '\u200b', textDecoration: css } } },
-    ]);
-  }
-
-  dispose() {
-    if (this.type) this.type.dispose();
-    this.disposables.forEach((d) => d.dispose());
-  }
 }
 
 // ─────────────────────────────── sparkle burst ───────────────────────────────
@@ -531,7 +394,7 @@ class ErrorKaomoji {
 class Mascot {
   constructor() {
     this.item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1000);
-    this.item.command = 'uwu.togglePetals';
+    this.item.command = 'uwu.sparkle';
     this.frame = 0;
     this.partyUntil = 0;
     this.timer = setInterval(() => {
@@ -569,7 +432,6 @@ class Mascot {
   render() {
     if (!cfg().get('mascot')) return;
     const { errors, warnings } = this.counts();
-    const petals = cfg().get('petals.enabled') ? 'on' : 'off';
     let face;
     let tip;
     if (Date.now() < this.partyUntil) {
@@ -586,7 +448,7 @@ class Mascot {
       tip = 'no errors, you are doing amazing ♡';
     }
     this.item.text = face;
-    this.item.tooltip = `uwu-code: ${tip}\nclick to turn petals ${petals === 'on' ? 'off' : 'on'}`;
+    this.item.tooltip = `uwu-code: ${tip}\nclick for sparkles ✧`;
   }
 
   dispose() {

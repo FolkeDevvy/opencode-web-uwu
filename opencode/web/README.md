@@ -1,11 +1,7 @@
 # ♡ uwu for the opencode web UI ✧
 
 A Firefox `userContent.css` that makes the **opencode v2 web UI** (`@opencode/cli` 2.x)
-super duper kawaii, with falling sakura included. No extensions needed.
-
-![sakura petals falling in the wind](screenshots/uwu-demo.gif)
-
-▶ The full 20-second, 60fps demo is [`screenshots/uwu-demo.mp4`](screenshots/uwu-demo.mp4).
+super duper kawaii. No extensions needed.
 
 | 🌙 Strawberry-milk night | 🌸 Sakura cream day |
 | --- | --- |
@@ -19,7 +15,6 @@ super duper kawaii, with falling sakura included. No extensions needed.
 - Gradient chat bubbles, an "opencode-chan" badge on replies, and ♡ list bullets
 - Pastel syntax highlighting and "window dots" on code blocks
 - Glowing rounded composer, gradient send/connect buttons, and bouncy hover effects
-- **Falling sakura petals in the wind 🌸.** Small far petals, bigger near ones, and a few big, blurry petals for depth, tumbling at different angles and swaying in the breeze. They fall *behind* the chat, which is slightly see-through so you can still see them, and text stays readable.
 - **Fun animations:**
   - new messages pop in
   - the composer gets a rainbow border while you type
@@ -29,7 +24,7 @@ super duper kawaii, with falling sakura included. No extensions needed.
   - the ✿ before headings spins
   - icon buttons wiggle, the code-block dots twinkle, and home rows slide in
 - Polka-dot background, a welcome banner on the home page, and a heart cursor
-- Respects `prefers-reduced-motion`, which turns off all animation, petals included
+- Respects `prefers-reduced-motion`, which turns off all animation
 
 ## Install (Firefox)
 
@@ -59,48 +54,17 @@ other sites alone. It needs Firefox 121 or later for `:has()` and CSS nesting.
 The theme mostly overrides OpenCode v2's own design tokens (`--v2-*`, `--syntax-*`), so
 it should survive most UI updates.
 
-## Tweaking the petals
-
-There's one knob near the top of `userContent.css`:
-
-```css
---uwu-petal-opacity: 1;   /* .5 = subtler (for no petals, use calm mode below) */
-```
-
-The petals are still pictures, and the whole layer slides with a CSS `transform` animation. Speed and breeze are
-the `uwu-fall` (20s per loop) and `uwu-breeze` animations in the petals section of `userContent.css`. To change
-the number of petals, their size or colours, edit `LAYERS` / `PINKS` in
-[`tools/petals.py`](../../tools/petals.py) and run `python3 tools/petals.py` from the repo root. It regenerates
-the petal block inside `userContent.css`.
-
-To drop just the blurry front petals, remove `var(--uwu-petals-front),` from the petal `background-image` line
-(and its `1000px 1000px,` from `background-size`).
-
 ## Performance
 
-The theme is built so Firefox animates almost everything on the compositor (`transform` and `opacity` only). Nothing
-repaints the page every frame:
-- **Petals:** one layer of still pictures that slides as a whole.
-- **No backdrop blur anywhere:** opencode keeps an invisible blurred drop-zone over the chat, and anything moving
-  behind a blur forces it to be recomputed every frame.
-- **Main-thread effects run briefly:** the bubble shimmer plays only as a message arrives, and the title-bar rainbow
-  only on hover.
+Everything animates on the compositor (`transform` and `opacity` only) or plays briefly, so
+nothing repaints the page every frame:
+- **No backdrop blur anywhere:** opencode keeps an invisible blurred drop-zone over the chat, and
+  any animation behind a blur forces it to be recomputed every frame.
+- **Main-thread effects run briefly:** the bubble shimmer plays only as a message arrives, and the
+  title-bar rainbow only on hover.
 
-Measured in Firefox 157 on an opencode chat page, with software rendering. That's the worst case: with GPU
-rendering, the remaining petal cost is much smaller.
-
-| | frames per second |
-| --- | --- |
-| no theme | 60 |
-| uwu, before this rework (animated SVG petals) | under 1 |
-| uwu now | about 45 |
-| uwu now, calm mode (no petals) | 60 |
-
-**Calm mode** (no petals at all, the cheapest it gets): add this line to the end of your `userContent.css`:
-
-```css
-:root:has(#oc-theme-preload-script) body::before { display: none !important; }
-```
+There used to be falling sakura petals in the background. They were removed because they
+distracted from the chat.
 
 ## Fonts offline?
 
