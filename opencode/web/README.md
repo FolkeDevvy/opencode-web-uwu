@@ -8,6 +8,9 @@ super duper kawaii. No extensions needed.
 | ![dark session](screenshots/session-dark.png) | ![light session](screenshots/session-light.png) |
 | ![dark home](screenshots/home-dark.png) | ![light dialog](screenshots/dialog-light.png) |
 
+▶ A 20-second, 60 fps demo (home, typing in a session, switching to day) is
+[`screenshots/uwu-demo.mp4`](screenshots/uwu-demo.mp4).
+
 ## What you get
 
 - Pastel pink / lavender / mint palette for **both** dark and light mode (follows OpenCode's own scheme toggle)

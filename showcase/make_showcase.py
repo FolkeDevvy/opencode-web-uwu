@@ -18,7 +18,6 @@ Needs PySide6 and ffmpeg.  python3 showcase/make_showcase.py [--preview-every N]
 """
 import argparse
 import math
-import random
 import subprocess
 import sys
 from pathlib import Path
@@ -36,7 +35,8 @@ W, H, FPS = 1920, 1080, 60
 CLIPS = Path(__file__).resolve().parent / "clips"
 LOCK = ROOT / "kde" / "lockscreen" / "lockscreen"
 SHOTS = {
-    "term": ROOT / "terminal" / "uwu-term" / "screenshots" / "uwu-term-demo.mp4",
+    # uwu-term recorded with its `petals` setting off (see README)
+    "term": CLIPS / "term-demo.mp4",
     "ide": ROOT / "vscode" / "screenshots" / "uwu-ide-demo.mp4",
     "web": ROOT / "opencode" / "web" / "screenshots" / "uwu-demo.mp4",
 }
@@ -97,16 +97,8 @@ class Kit:
         self.night.p.end()
         self.day.p.end()
         self.wall = {v: self._wall(v) for v in ("night", "day")}
-        self.petal_imgs = [QImage(str(LOCK / "assets" / f"petal-{i}.png")) for i in range(4)]
-        self.soft_imgs = [QImage(str(LOCK / "assets" / f"petal-blur-{i}.png")) for i in range(3)]
         self.bunny = {m: QSvgRenderer(str(LOCK / "assets" / f"bunny-{m}.svg")) for m in ("awake", "love", "sleepy")}
         self.logo = QSvgRenderer(str(ROOT / "kde" / "plasma" / "icons" / "uwu-launcher.svg"))
-        rnd = random.Random(5)
-        self.petals = [dict(x=rnd.uniform(-0.2, 1.0), t0=rnd.random(), dur=rnd.uniform(9, 16), img=rnd.randrange(4),
-                            s=rnd.uniform(14, 30), sway=rnd.uniform(20, 60), ph=rnd.uniform(0, 6.28),
-                            spin=rnd.uniform(-1, 1) * 300, flip=rnd.uniform(0.5, 2)) for _ in range(46)]
-        self.soft = [dict(x=rnd.uniform(0, 1), t0=rnd.random(), dur=rnd.uniform(16, 22), img=rnd.randrange(3),
-                          s=rnd.uniform(110, 190), ph=rnd.uniform(0, 6.28)) for _ in range(4)]
         self._layers = {}
 
     def _wall(self, variant):
@@ -117,34 +109,6 @@ class Kit:
 
     def scene(self, variant):
         return self.night if variant == "night" else self.day
-
-    # falling petals with wind, drawn straight onto the frame
-    def draw_petals(self, p, time, alpha=1.0, w=W, h=H):
-        wind = 40 * math.sin(time * 0.35) + 25
-        for pt in self.petals:
-            k = ((time / pt["dur"]) + pt["t0"]) % 1.0
-            x = pt["x"] * w + k * (180 + wind) + math.sin(k * 6.28 * 1.4 + pt["ph"]) * pt["sway"]
-            y = -40 + k * (h + 80)
-            p.save()
-            p.translate(x, y)
-            p.rotate(pt["ph"] * 57 + k * pt["spin"])
-            p.scale(0.35 + 0.65 * abs(math.cos(k * 6.28 * pt["flip"] + pt["ph"])), 1)
-            p.setOpacity(alpha * 0.85 * min(1, k * 12, (1 - k) * 12))
-            s = pt["s"]
-            p.drawImage(QRectF(-s / 2, -s / 2, s, s), self.petal_imgs[pt["img"]])
-            p.restore()
-        for pt in self.soft:
-            k = ((time / pt["dur"]) + pt["t0"]) % 1.0
-            x = pt["x"] * w + k * 260 + math.sin(k * 6.28 + pt["ph"]) * 50
-            y = -200 + k * (h + 400)
-            s = pt["s"]
-            p.save()
-            p.setOpacity(alpha * 0.4 * min(1, k * 8, (1 - k) * 8))
-            p.translate(x, y)
-            p.rotate(pt["ph"] * 40 + k * 90)
-            p.drawImage(QRectF(-s / 2, -s / 2, s, s), self.soft_imgs[pt["img"]])
-            p.restore()
-        p.setOpacity(1)
 
     def text(self, p, rect, s, size, colour, weight=QFont.Black, align=Qt.AlignCenter, family="Nunito"):
         f = QFont(family)
@@ -367,10 +331,8 @@ class Show:
             return fn
         return deco
 
-    def desktop(self, p, variant, time, petals=True):
+    def desktop(self, p, variant, time):
         p.drawImage(0, 0, self.k.wall[variant])
-        if petals:
-            self.k.draw_petals(p, time)
 
     def build(self):
         k = self.k
@@ -385,7 +347,6 @@ class Show:
             p.drawImage(0, 0, k.wall["night"])
             p.restore()
             p.fillRect(QRectF(0, 0, W, H), QColor(20, 6, 26, 140))
-            k.draw_petals(p, T)
             a = ease_out(t / 1.0)
             # bunny
             b = 150
@@ -511,13 +472,12 @@ class Show:
             if r < 2300:
                 p.setPen(QPen(QColor(255, 255, 255, 160), 6))
                 p.drawEllipse(QPointF(cx, cy), r, r)
-            k.draw_petals(p, T, 0.6)
             k.caption(p, "uwu day ☀", "one click: every colour follows", ease_out((t - 1.0) / 0.6))
             k.cursor(p, cx - 3, cy + 2, t < 0.15)
 
         @self.seg("rotate", 6.4)
         def rotate(p, t, T):
-            dayimg = self._full("day", T, petals=False)
+            dayimg = self._full("day", T)
             p.fillRect(QRectF(0, 0, W, H), QColor("#2a1630"))
             bg = self._blurred_day()
             p.setOpacity(ease(t / 0.8))
@@ -585,7 +545,6 @@ class Show:
         def end(p, t, T):
             p.drawImage(0, 0, self._blurred_night())
             p.fillRect(QRectF(0, 0, W, H), QColor(20, 6, 26, 110))
-            k.draw_petals(p, T)
             b = 130
             hop = abs(math.sin(t * 3.0)) * 22
             k.bunny["love"].render(p, QRectF(W / 2 - b / 2, 170 - hop, b, b))
@@ -663,7 +622,7 @@ class Show:
                 img = self.still(ROOT / "opencode" / "tui" / "screenshots" / "tui-diff-dark.png", TUI_RECT.width(), TUI_RECT.height())
                 self.k.deco_window(q, "night", img, TUI_RECT, "opencode ♡ Konsole", True)
             else:
-                self.k.app_window(q, self.still(ROOT / "terminal" / "uwu-term" / "screenshots" / "light.png", TERM_RECT.width(), TERM_RECT.height()), TERM_RECT, 18)
+                self.k.app_window(q, self.still(CLIPS / "term-light.png", TERM_RECT.width(), TERM_RECT.height()), TERM_RECT, 18)
                 self.k.app_window(q, self.still(ROOT / "vscode" / "screenshots" / "uwu-ide-light.png", IDE_RECT.width(), IDE_RECT.height()), IDE_RECT, 10)
                 self.k.deco_window(q, "day", self.still(ROOT / "opencode" / "web" / "screenshots" / "session-light.png", WEB_RECT.width(), WEB_RECT.height()), WEB_RECT, "opencode ♡ Firefox", False)
                 img = self.still(ROOT / "opencode" / "tui" / "screenshots" / "tui-diff-light.png", TUI_RECT.width(), TUI_RECT.height())
@@ -671,13 +630,11 @@ class Show:
             self.k.panel(q, variant, [TERM_TASK, IDE_TASK, WEB_TASK, TUI_TASK], active="Konsole")
         return self._layer(f"windows-{variant}", d)
 
-    def _full(self, variant, T, petals=True):
+    def _full(self, variant, T):
         img = QImage(W, H, QImage.Format_ARGB32_Premultiplied)
         q = QPainter(img)
         q.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
         q.drawImage(0, 0, self.k.wall[variant])
-        if petals:
-            self.k.draw_petals(q, T)
         q.drawImage(0, 0, self._windows(variant))
         q.end()
         return img

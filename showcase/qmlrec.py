@@ -18,13 +18,14 @@ ap.add_argument("qml"); ap.add_argument("out")
 ap.add_argument("--size", default="1920x1080"); ap.add_argument("--seconds", type=float, default=5)
 ap.add_argument("--lock", action="store_true"); ap.add_argument("--theme", default="night")
 ap.add_argument("--script", default=""); ap.add_argument("--stages", default="")
+ap.add_argument("--no-petals", action="store_true", help="record without the falling petals")
 a = ap.parse_args()
 W, H = (int(v) for v in a.size.split("x"))
 app = QGuiApplication(sys.argv)
 v = QQuickView(); v.setResizeMode(QQuickView.SizeRootObjectToView); v.setColor(Qt.black)
 if a.lock:
     ctx = v.rootContext(); auth = lp.FakeAuthenticator("uwu"); cfg = QQmlPropertyMap(app)
-    for k, val in (("theme", a.theme), ("useWallpaper", False), ("petals", True), ("petalCount", 40)): cfg.insert(k, val)
+    for k, val in (("theme", a.theme), ("useWallpaper", False), ("petals", not a.no_petals), ("petalCount", 40)): cfg.insert(k, val)
     ctx.setContextProperty("authenticator", auth); ctx.setContextProperty("kscreenlocker_userName", "Folke")
     ctx.setContextProperty("kscreenlocker_userImage", ""); ctx.setContextProperty("config", cfg); ctx.setContextProperty("wallpaper", None)
 v.setSource(QUrl.fromLocalFile(a.qml))
@@ -32,6 +33,20 @@ if v.status() != QQuickView.Ready:
     [print(e.toString()) for e in v.errors()]; sys.exit(1)
 v.setGeometry(0, 0, W, H); v.show()
 root = v.rootObject()
+
+
+def hide_petals(item):
+    """Hide every image drawn from a petal picture (the splash has no petal setting)."""
+    for child in item.childItems():
+        if "petal" in str(child.property("source") or ""):
+            child.setVisible(False)
+        hide_petals(child)
+
+
+if a.no_petals:
+    hide_petals(root)
+    # Repeaters can create their items a moment later, so check again shortly after
+    QTimer.singleShot(50, lambda: hide_petals(root))
 for item in filter(None, a.stages.split(",")):      # "ms:stage"
     ms, st = item.split(":"); QTimer.singleShot(int(ms), lambda st=int(st): root.setProperty("stage", st))
 def run_script(script):
