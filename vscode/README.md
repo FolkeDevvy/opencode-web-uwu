@@ -67,11 +67,11 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 > **Quick way:** `./uwu.sh install vscode` from the repo root.
 
 ```sh
-code --install-extension vscode/uwu-code-0.2.1.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.3.0.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.2.1.vsix`](uwu-code-0.2.1.vsix).
+[`uwu-code-0.3.0.vsix`](uwu-code-0.3.0.vsix).
 
 Then do the following:
 1. `Ctrl+K Ctrl+T` → **uwu strawberry-milk night** or **uwu sakura cream day**
@@ -84,6 +84,7 @@ Then do the following:
 "uwu.petals.opacity": 0.7,
 "uwu.petals.area": "edges",            // or "everywhere"
 "uwu.petals.layers": "noFront",        // "far" | "noFront" | "all"
+"uwu.petals.style": "light",           // or "classic" (self-animating, much heavier)
 "uwu.sparkleOnSave": true,
 "uwu.gutterHearts": true,
 "uwu.errorKaomoji": true,
@@ -98,11 +99,37 @@ Then do the following:
 
 The [extension README](uwu-code/README.md) has every detail.
 
+## Performance
+
+The petals are still pictures on one layer that slides with a GPU-friendly `transform` animation.
+Before 0.3.0 every petal animated itself (animated SVG), which made the editor redraw its whole
+background on every frame.
+
+- **Editor petals move only when the Kawaii Workbench is on**, since it supplies the animation.
+  Without it they stay still, which costs nothing. To get the old self-animating petals without
+  the Kawaii Workbench, set `"uwu.petals.style": "classic"`. They look the same but use far
+  more CPU.
+- **Calm mode:** turn on VS Code's own *Reduce Motion* setting (`"workbench.reduceMotion": "on"`).
+  The Kawaii Workbench then stops every animation, petals included, and keeps all the styling.
+- The title-bar shimmer now runs only on hover, and the command palette's border no longer spins.
+
+Measured in VS Code 1.140.0 on Linux, with software rendering. That's the worst case: with GPU
+rendering the remaining cost is much smaller.
+
+| | idle | scrolling | typing |
+| --- | --- | --- | --- |
+| no extension | 60 fps | 60 fps | 60 fps |
+| uwu 0.2 | 52 fps, 269% CPU | 52 fps, 290% CPU | 56 fps, 262% CPU |
+| uwu 0.3 | 60 fps, 14% CPU | 59 fps, 92% CPU | 60 fps, 14% CPU |
+| uwu 0.2 + Kawaii Workbench | 32 fps, 319% CPU | 30 fps, 322% CPU | 33 fps, 299% CPU |
+| uwu 0.3 + Kawaii Workbench | 47 fps, 107% CPU | 47 fps, 142% CPU | 56 fps, 109% CPU |
+| uwu 0.3 + Kawaii Workbench, calm mode | 60 fps, 7% CPU | 59 fps, 94% CPU | 60 fps, 14% CPU |
+
 ## Building from source
 
 ```sh
 python3 tools/vscode_theme.py      # colour themes from tools/palette.py
 python3 tools/petals.py            # petal tiles (shared with the web theme)
 python3 tools/kawaii_assets.py     # Kawaii Workbench icons/mascot + the uwu cuties file icons
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.2.1.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.3.0.vsix
 ```

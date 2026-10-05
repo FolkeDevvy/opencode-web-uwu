@@ -92,6 +92,10 @@ Edit it, then restart uwu-term to apply.
 If your system asks apps for reduced motion (`prefers-reduced-motion`), all animation stops. You can also switch
 each effect off above.
 
+The petals are still pictures on one layer that slides with a GPU `transform` animation, so they're cheap: with
+software rendering, uwu-term holds 60 fps at about 75% CPU. Older versions used animated SVG petals and managed
+39 fps at about 220%.
+
 ## Wayland notes
 
 - uwu-term runs as a native Wayland client (`--ozone-platform-hint=auto`) and uses X11 automatically elsewhere.

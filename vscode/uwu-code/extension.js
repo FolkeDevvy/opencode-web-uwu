@@ -212,8 +212,18 @@ async function checkKawaiiAfterUpdate(context) {
 // petals land on exactly the same spot in the document. Re-anchoring while you
 // scroll therefore never moves a single petal, and because the anchor sits half
 // a screen from either edge it can't scroll out of view (and vanish) before the
-// update arrives. The petal SVGs animate themselves (fall, sway, spin, wind).
+// update arrives.
+//
+// Motion: with the default "light" style the petal pictures are still, and the
+// whole layer slides down (and sways) with the uwu-editor-fall / uwu-editor-breeze
+// CSS animations, which the GPU compositor runs without repainting anything.
+// Those keyframes live in the Kawaii Workbench stylesheet (an extension can't
+// add @keyframes through the decoration API), so without the workbench the
+// petals simply stay still. The "classic" style uses self-animating SVGs
+// instead: they move everywhere, but the editor repaints them every frame,
+// which costs a lot of CPU.
 const SPAN = 120; // lines the layer reaches above and below its anchor
+const FALL = 1000; // px the layer slides per loop (a multiple of every light tile's height)
 
 class Petals {
   constructor() {
@@ -237,7 +247,9 @@ class Petals {
     this.anchors = new WeakMap();
     if (cfg().get('petals.enabled')) {
       const which = cfg().get('petals.layers');
-      const layers = which === 'far' ? petalLayers.slice(2) : which === 'noFront' ? petalLayers.slice(1) : petalLayers;
+      this.classic = cfg().get('petals.style') === 'classic';
+      const all = this.classic ? petalLayers.classic : petalLayers.light;
+      const layers = which === 'far' ? all.slice(2) : which === 'noFront' ? all.slice(1) : all;
       // pale petals almost vanish on a light background, so give them a boost there
       const kind = vscode.window.activeColorTheme.kind;
       const light = kind === vscode.ColorThemeKind.Light || kind === vscode.ColorThemeKind.HighContrastLight;
@@ -265,6 +277,10 @@ class Petals {
         'background-repeat: repeat',
         `-webkit-mask-image: ${mask}`,
         `mask-image: ${mask}`,
+        ...(this.classic ? [] : [
+          'will-change: transform',
+          'animation: uwu-editor-fall 24s linear infinite, uwu-editor-breeze 13s ease-in-out infinite alternate',
+        ]),
       ].join('; ');
       this.layerCount = layers.length;
       this.type = vscode.window.createTextEditorDecorationType({
@@ -290,18 +306,26 @@ class Petals {
     const top = vis.length ? vis[0].start.line : 0;
     const bottom = vis.length ? vis[vis.length - 1].end.line : 0;
     const anchor = Math.min(lineCount - 1, Math.floor((top + bottom) / 2));
-    if (!force && this.anchors.get(editor) === anchor) return;
+    const prev = this.anchors.get(editor);
+    if (!force && prev !== undefined) {
+      // Every re-anchor repaints the whole petal layer, so only do it when the
+      // view gets near the layer's edge (it reaches SPAN lines either way).
+      const margin = Math.max(20, bottom - top);
+      if (prev === anchor || (top >= prev - SPAN + margin && bottom <= prev + SPAN - margin)) return;
+    }
     this.anchors.set(editor, anchor);
     // the layer starts `above` lines over the anchor; its background is shifted
     // by the line it starts on, which keeps every petal glued to the document
     const above = Math.min(anchor, SPAN);
     const start = anchor - above;
     const pos = `0 calc(${-start} * 1lh)`;
+    // light: one extra loop of height above, so the sliding layer never shows its top edge
+    const extra = this.classic ? 0 : FALL;
     const css = [
       'none',
-      `top: calc(${-above} * 1lh)`,
+      `top: calc(${-above} * 1lh - ${extra}px)`,
       // reach SPAN lines below the anchor, and past the end of a short file
-      `height: calc(${above + SPAN} * 1lh + 100vh)`,
+      `height: calc(${above + SPAN} * 1lh + 100vh + ${extra}px)`,
       `background-position: ${Array(this.layerCount).fill(pos).join(', ')}`,
     ].join('; ');
     editor.setDecorations(this.type, [

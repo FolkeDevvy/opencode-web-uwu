@@ -12,12 +12,6 @@
   font-display: block;
 }
 
-@property --uwu-spin {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
 /* ─────────────────────────────── palette ─────────────────────────────── */
 .monaco-workbench[class*="uwu-code-themes-uwu-"] {
   --k-font: "uwu Nunito", "Nunito", "M PLUS Rounded 1c", "Quicksand", system-ui, sans-serif;
@@ -84,16 +78,24 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
     radial-gradient(#ff5fae22 1.4px, transparent 1.6px) 0 0 / 20px 20px,
     #ffe1ef !important;
 }
-/* petals drifting across the whole window, behind every card */
+/* petals drifting across the whole window, behind every card.
+   Performance: the petal pictures are still, and the whole layer slides with a
+   transform animation, which the GPU compositor runs without repainting. The
+   layer is one loop (1000px) taller than the window, so it wraps seamlessly. */
 body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: -1000px;
+  left: -60px;
+  right: -60px;
+  bottom: 0;
   pointer-events: none;
   z-index: -1;
   background-image: var(--uwu-window-petals);
   background-size: var(--uwu-window-petals-size);
   opacity: .55;
+  will-change: transform;
+  animation: uwu-editor-fall 30s linear infinite, uwu-window-breeze 13s ease-in-out infinite alternate;
 }
 
 .monaco-workbench[class*="uwu-code-themes-uwu-"] {
@@ -161,8 +163,9 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
   .part.titlebar {
     background: linear-gradient(90deg, #ff8fc838, #c7a2ff30, #8ff5cf26, #ff8fc838) 0 0 / 300% 100% !important;
     border-bottom: 0 !important;
-    animation: uwu-drift 18s linear infinite;
   }
+  /* the gradient only flows while you hover the title bar (it repaints every frame) */
+  .part.titlebar:hover { animation: uwu-drift 18s linear infinite; }
   .part.titlebar .window-appicon { position: relative; overflow: visible !important; }
   .part.titlebar .window-appicon::after {
     content: "uwu IDE";
@@ -442,9 +445,9 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
     border: 2.5px solid transparent !important;
     background:
       linear-gradient(var(--k-card-solid), var(--k-card-solid)) padding-box,
-      conic-gradient(from var(--uwu-spin), var(--k-pink), var(--k-lav), var(--k-sky), var(--k-mint), var(--k-butter), var(--k-pink)) border-box !important;
+      conic-gradient(from 200deg, var(--k-pink), var(--k-lav), var(--k-sky), var(--k-mint), var(--k-butter), var(--k-pink)) border-box !important;
     box-shadow: 0 20px 60px #0a000f88, 0 0 40px var(--k-glow) !important;
-    animation: uwu-pop .35s var(--k-bounce) both, uwu-spin 5s linear infinite;
+    animation: uwu-pop .35s var(--k-bounce) both;
   }
   .quick-input-widget::before {
     content: "✧ what shall we do today? ✧";
@@ -659,12 +662,23 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"])::before {
 @media (prefers-reduced-motion: reduce) {
   .monaco-workbench[class*="uwu-code-themes-uwu-"] *, .uwu-fx, body::before { animation: none !important; transition: none !important; }
 }
+/* calm mode: VS Code's own "Reduce Motion" setting (workbench.reduceMotion: on)
+   stops every uwu animation, petals included, for the lightest possible load */
+/* (pseudo-elements can't go inside :is(), so each one is spelled out) */
+body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *,
+body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *::before,
+body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *::after,
+body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"])::before { animation: none !important; }
 
 /* ═════════════════════════════ keyframes ═════════════════════════════ */
 @keyframes uwu-card-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
 @keyframes uwu-pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
 @keyframes uwu-slide-up { from { opacity: 0; transform: translateY(30px) scale(.95); } to { opacity: 1; transform: none; } }
-@keyframes uwu-spin { to { --uwu-spin: 360deg; } }
+/* petals: the editor's petal layer (from the extension) and the window layer
+   slide down 1000px per loop and sway in the breeze. Compositor-only. */
+@keyframes uwu-editor-fall { from { transform: translateY(0); } to { transform: translateY(1000px); } }
+@keyframes uwu-editor-breeze { from { translate: -20px 0; } to { translate: 20px 0; } }
+@keyframes uwu-window-breeze { from { translate: -45px 0; } to { translate: 45px 0; } }
 @keyframes uwu-heartbeat { 0%, 40%, 100% { transform: scale(1); } 12% { transform: scale(1.3); } 24% { transform: scale(.95); } 32% { transform: scale(1.15); } }
 @keyframes uwu-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 @keyframes uwu-wiggle-slow { 0%, 86%, 100% { transform: rotate(0); } 90% { transform: rotate(-14deg); } 95% { transform: rotate(10deg); } }

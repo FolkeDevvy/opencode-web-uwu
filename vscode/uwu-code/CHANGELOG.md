@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+- **Much lighter petals.** They're now still pictures on one layer that slides with a GPU
+  transform, instead of hundreds of self-animating SVG petals. Idle CPU dropped from about 270%
+  to about 14% (software rendering).
+- Editor petals move when the Kawaii Workbench is on and stay still without it. The new
+  `uwu.petals.style: "classic"` setting brings back the old self-animating petals.
+- Petal re-positioning while scrolling now happens only near the edge of the petal layer.
+- Kawaii Workbench: the window petals use the same light layer. The title-bar shimmer runs only on
+  hover, and the command palette border no longer spins.
+- Kawaii Workbench: VS Code's *Reduce Motion* setting now acts as a calm mode that stops every
+  animation.
+
 ## 0.2.1
 
 - Kawaii Workbench: the activity-bar dock is now a clean floating pill. VS Code's own frame behind
