@@ -8,8 +8,6 @@
 - Clicking the status-bar mascot now gives you a sparkle burst.
 - After an uwu-code update, you're offered to re-apply the Kawaii Workbench, so VS Code picks up
   the new look (here: the window without petals).
-- Kawaii Workbench: the Reduce Motion calm mode actually works now. The old rule used
-  pseudo-elements inside `:is()`, which is invalid, so the browser ignored it.
 
 ## 0.3.0
 
