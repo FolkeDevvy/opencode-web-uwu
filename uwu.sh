@@ -201,18 +201,49 @@ vscode_install() {
             warn "couldn't install the extension in $c"
         fi
     done
-    info "For the full kawaii IDE: Ctrl+Shift+P → \"uwu: Enable Kawaii Workbench\"."
+    if kawaii_workbench_patched; then
+        kawaii_workbench_refresh
+    else
+        info "For the full kawaii IDE: Ctrl+Shift+P → \"uwu: Enable Kawaii Workbench\"."
+    fi
+    info "Restart VS Code (close every window) so the new version takes over."
 }
 
-kawaii_workbench_patched() {
-    # read-only look for the Kawaii Workbench marker in VS Code's workbench.html
-    local d
+# every VS Code install the Kawaii Workbench is applied to, as its uwu-kawaii/ folder
+# (UWU_VSCODE_ROOTS adds install folders this list doesn't know about)
+kawaii_workbench_dirs() {
+    local d f
     for d in /usr/share/code /usr/lib/code /opt/visual-studio-code /usr/share/codium /opt/vscodium \
-             /usr/lib/vscodium "$HOME/.local/share/code" "$HOME/VSCode-linux-x64"; do
+             /usr/lib/vscodium "$HOME/.local/share/code" "$HOME/VSCode-linux-x64" ${UWU_VSCODE_ROOTS:-}; do
         [ -d "$d" ] || continue
-        find "$d" -maxdepth 9 -name 'workbench*.html' -exec grep -l 'uwu-kawaii:start' {} + 2>/dev/null | grep -q . && return 0
-    done
-    return 1
+        find "$d" -maxdepth 9 -name 'workbench*.html' -exec grep -l 'uwu-kawaii:start' {} + 2>/dev/null |
+            while read -r f; do [ -d "$(dirname "$f")/uwu-kawaii" ] && echo "$(dirname "$f")/uwu-kawaii"; done
+    done | sort -u
+}
+kawaii_workbench_patched() { [ -n "$(kawaii_workbench_dirs)" ]; }
+
+# The Kawaii Workbench lives in a copy inside VS Code's own folder, so updating the
+# extension alone doesn't change it. Swap in the new files (same names, so
+# workbench.html and its checksum stay as they are).
+kawaii_workbench_refresh() {
+    local src="$HERE/vscode/uwu-code/workbench" dir run
+    while read -r dir; do
+        [ -n "$dir" ] || continue
+        if diff -rq "$src" "$dir" >/dev/null 2>&1; then continue; fi
+        run=""
+        if [ ! -w "$dir" ] || [ ! -w "$(dirname "$dir")" ]; then
+            have sudo || { warn "can't update the Kawaii Workbench in $dir (no write access). In VS Code run"
+                           warn "Ctrl+Shift+P → \"uwu: Enable Kawaii Workbench\" to re-apply it."; continue; }
+            info "updating the Kawaii Workbench inside VS Code needs your password (sudo):"
+            run=sudo
+        fi
+        if $run sh -c 'rm -rf "$2" && cp -r "$1" "$2"' sh "$src" "$dir"; then
+            ok "Kawaii Workbench updated in $(dirname "$dir")."
+        else
+            warn "couldn't update the Kawaii Workbench in $dir. In VS Code run"
+            warn "Ctrl+Shift+P → \"uwu: Enable Kawaii Workbench\" to re-apply it."
+        fi
+    done < <(kawaii_workbench_dirs)
 }
 
 vscode_uninstall() {

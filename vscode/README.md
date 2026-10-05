@@ -54,6 +54,9 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
   packages), the extension can't write there itself. It prepares everything and gives you a
   one-line `sudo sh …` command, plus a button that runs it in a terminal. Tarball installs in your
   home folder are patched directly.
+- **Updating uwu-code.** `./uwu.sh install vscode` also updates the Kawaii Workbench files inside
+  VS Code (asking for `sudo` on system installs). Without the script, accept the *Re-apply* prompt
+  after the update. Either way, restart VS Code afterwards.
 - **Re-apply it after VS Code updates.** An update replaces VS Code's files. uwu-code notices on the
   next start and offers to re-apply.
 - **No "corrupt installation" warning.** The patched file's checksum is updated too.
