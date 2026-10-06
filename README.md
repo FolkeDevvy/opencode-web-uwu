@@ -74,7 +74,7 @@ opencode/
   tui/          opencode TUI themes
 vscode/
   uwu-code/     the VS Code extension (source)
-  uwu-code-0.4.0.vsix   ready-to-install package
+  uwu-code-0.4.1.vsix   ready-to-install package
 kde/
   plasma/       the Plasma desktop theme (./install.sh)
   lockscreen/   the Plasma lock screen (./install.sh)

@@ -70,11 +70,11 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 > **Quick way:** `./uwu.sh install vscode` from the repo root.
 
 ```sh
-code --install-extension vscode/uwu-code-0.4.0.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.4.1.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.4.0.vsix`](uwu-code-0.4.0.vsix).
+[`uwu-code-0.4.1.vsix`](uwu-code-0.4.1.vsix).
 
 Then do the following:
 1. `Ctrl+K Ctrl+T` → **uwu strawberry-milk night** or **uwu sakura cream day**
@@ -99,9 +99,10 @@ The [extension README](uwu-code/README.md) has every detail.
 
 ## Performance
 
-There are no falling petals any more (they were removed in 0.4.0). The extension on its own now
-costs about as much as plain VS Code. The Kawaii Workbench keeps a few small looping animations:
-the mascot float, icon wiggles and the heartbeat on unsaved tabs.
+There are no falling petals any more (they were removed in 0.4.0). The extension on its own
+costs about as much as plain VS Code. In the Kawaii Workbench, the little animations (the mascot
+float, heartbeats, hops and wiggles) play a few times when something happens and then rest, so
+nothing keeps VS Code redrawing while you work.
 
 - **Calm mode:** turn on VS Code's own *Reduce Motion* setting (`"workbench.reduceMotion": "on"`).
   The Kawaii Workbench then stops every animation and keeps all the styling.
@@ -116,13 +117,14 @@ rendering the remaining cost is much smaller.
 | uwu 0.2 (animated petals) | 52 fps, 269% CPU | 52 fps, 290% CPU | 56 fps, 262% CPU |
 | uwu 0.4 | 60 fps, 14% CPU | 60 fps, 91% CPU | 59 fps, 15% CPU |
 | uwu 0.2 + Kawaii Workbench | 32 fps, 319% CPU | 30 fps, 322% CPU | 33 fps, 299% CPU |
-| uwu 0.4 + Kawaii Workbench | 55 fps, 106% CPU | 47 fps, 154% CPU | 53 fps, 104% CPU |
-| uwu 0.4 + Kawaii Workbench, calm mode | 60 fps, 7% CPU | 59 fps, 94% CPU | 60 fps, 14% CPU |
+| uwu 0.4.0 + Kawaii Workbench | 55 fps, 106% CPU | 47 fps, 154% CPU | 53 fps, 104% CPU |
+| uwu 0.4.1 + Kawaii Workbench | 60 fps, 16% CPU | 60 fps, 102% CPU | 60 fps, 10% CPU |
+| uwu 0.4.1 + Kawaii Workbench, calm mode | 60 fps, 7% CPU | 59 fps, 94% CPU | 60 fps, 14% CPU |
 
 ## Building from source
 
 ```sh
 python3 tools/vscode_theme.py      # colour themes from tools/palette.py
 python3 tools/kawaii_assets.py     # Kawaii Workbench icons/mascot + the uwu cuties file icons
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.0.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.1.vsix
 ```

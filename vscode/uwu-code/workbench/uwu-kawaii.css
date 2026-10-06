@@ -118,7 +118,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
     pointer-events: none;
     z-index: 30;
     transform: rotate(12deg);
-    animation: uwu-wiggle-slow 7s ease-in-out infinite;
+    animation: uwu-wiggle-slow 7s ease-in-out 2;
   }
   .part.sidebar::after {
     content: "";
@@ -169,7 +169,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
     position: absolute;
     inset: 0;
     background: var(--uwu-logo) center / 22px no-repeat;
-    animation: uwu-wiggle-slow 6s ease-in-out infinite;
+    animation: uwu-wiggle-slow 6s ease-in-out 2;
   }
   .command-center .command-center-center {
     border-radius: 99px !important;
@@ -233,7 +233,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
       background: var(--k-butter) !important;
       color: #2a0c22 !important;
       font-weight: 900;
-      animation: uwu-heartbeat 1.6s ease-in-out infinite;
+      animation: uwu-heartbeat 1.6s ease-in-out 3;
     }
     /* swap the codicon glyphs for our own drawn icons */
     .action-label:is(.codicon-explorer-view-icon, .codicon-search-view-icon, .codicon-source-control-view-icon,
@@ -283,7 +283,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
   }
   .monaco-list .monaco-list-row.focused { outline: none !important; }
   .monaco-list-row:hover .monaco-icon-label::before { animation: uwu-wiggle .5s ease-in-out; }
-  .monaco-list-row.selected .monaco-icon-label::before { animation: uwu-hop 1.4s ease-in-out infinite; }
+  .monaco-list-row.selected .monaco-icon-label::before { animation: uwu-hop 1.4s ease-in-out 2; }
   /* tree arrows become hearts */
   .monaco-tl-twistie.collapsible::before {
     content: "♥" !important;
@@ -298,6 +298,11 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
   .monaco-tl-indent > .indent-guide { border-left: 1px dashed var(--k-line-strong) !important; }
 
   /* ─────────────── editor tabs: candy pills ─────────────── */
+  /* The classic tab layout sizes the label, file icon and buttons inside a tab
+     from this variable (35px), so set it to the pill's height. Otherwise the
+     text sits low and the ✕ sits high. (The newer "modern UI" tabs size
+     themselves and add their own spacing, so they're left alone.) */
+  &:not(.modern-ui-tabs) .editor-group-container > .title .tab { --editor-group-tab-height: 28px; }
   .editor-group-container > .title {
     background: transparent !important;
     .tabs-container { padding: 0 8px !important; gap: 6px; align-items: center; }
@@ -305,7 +310,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
       border-radius: 99px !important;
       background: var(--k-raise) !important;
       border: 0 !important;
-      height: 26px !important;
+      height: 28px !important;
       padding-left: 6px !important;
       transition: transform .3s var(--k-bounce), background .2s;
       animation: uwu-pop .5s var(--k-bounce) both;
@@ -317,14 +322,16 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
       .label-name, .monaco-icon-label::after, .tab-label { color: var(--k-ink) !important; font-weight: 800; }
     }
     .tab::after, .tab-fill, .tab-connected-edge, .tab-border-top-container, .tab-border-bottom-container { display: none !important; }
-    .tab .tab-actions { height: 26px !important; }
+    .tab .tab-label { line-height: 28px !important; }
+    .tab .tab-actions { height: 28px !important; display: flex !important; align-items: center; }
+    .tab .tab-actions .actions-container { height: 28px !important; align-items: center; }
     /* unsaved files get a beating heart instead of a dot */
     .tab.dirty:not(:hover) .tab-actions .action-label::before {
       content: "♥" !important;
       font-family: var(--k-font) !important;
       color: var(--k-hot);
       display: inline-block;
-      animation: uwu-heartbeat 1.2s ease-in-out infinite;
+      animation: uwu-heartbeat 1.2s ease-in-out 3;
     }
     .tab.active.dirty:not(:hover) .tab-actions .action-label::before { color: var(--k-ink); }
   }
@@ -356,7 +363,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
       color: var(--k-pink);
       font-family: var(--k-font);
       font-size: 10px;
-      animation: uwu-heartbeat 1.6s ease-in-out infinite;
+      animation: uwu-heartbeat 1.6s ease-in-out 2;
     }
     .selected-text { border-radius: 6px; }
     .bracket-match {
@@ -378,7 +385,7 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
       background-size: contain !important;
       aspect-ratio: 1 / 1 !important;
       max-width: 320px !important;
-      animation: uwu-float 4s ease-in-out infinite;
+      animation: uwu-float 4s ease-in-out 3;
     }
     .letterpress::after {
       content: "uwu IDE ✿ let's make something cute today";
@@ -618,12 +625,12 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
   cursor: pointer;
   background: var(--uwu-mascot) center / contain no-repeat;
   filter: drop-shadow(0 6px 14px #ff8fc866);
-  animation: uwu-float 3.2s ease-in-out infinite;
+  animation: uwu-float 3.2s ease-in-out 3;
   transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
 }
 .uwu-mascot:hover { transform: scale(1.12) rotate(-6deg); }
 .uwu-mascot.jump { animation: uwu-jump .7s cubic-bezier(.34, 1.56, .64, 1); }
-.uwu-mascot.sad { animation: uwu-sad 2.4s ease-in-out infinite; filter: drop-shadow(0 6px 14px #9fd8ff66) saturate(.75); }
+.uwu-mascot.sad { animation: uwu-sad 2.4s ease-in-out 2; filter: drop-shadow(0 6px 14px #9fd8ff66) saturate(.75); }
 .uwu-bubble {
   right: 92px;
   bottom: 96px;
@@ -646,9 +653,10 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
 /* calm mode: VS Code's own "Reduce Motion" setting (workbench.reduceMotion: on)
    stops every uwu animation, for the lightest possible load */
 /* (pseudo-elements can't go inside :is(), so each one is spelled out) */
-body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *,
-body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *::before,
-body:has(> .monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"]) *::after { animation: none !important; }
+.monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"] *,
+.monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"] *::before,
+.monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"] *::after,
+.monaco-workbench.monaco-reduce-motion[class*="uwu-code-themes-uwu-"] ~ .uwu-fx { animation: none !important; }
 
 /* ═════════════════════════════ keyframes ═════════════════════════════ */
 @keyframes uwu-card-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }

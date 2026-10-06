@@ -51,6 +51,7 @@ function activate(context) {
       bridge.refresh();
     }),
   );
+  dropOldSettings(context);
   checkKawaiiAfterUpdate(context);
 }
 
@@ -68,7 +69,6 @@ const KAWAII_SETTINGS = {
   'workbench.list.smoothScrolling': true,
   'workbench.tree.indent': 14,
   'workbench.tree.renderIndentGuides': 'always',
-  'editor.cursorBlinking': 'expand',
   'editor.cursorSmoothCaretAnimation': 'on',
   'editor.cursorWidth': 3,
   'editor.smoothScrolling': true,
@@ -182,6 +182,26 @@ async function applySettings(context, enable) {
 }
 
 /** After a VS Code update the patch is gone; offer to put it back. */
+// Settings older versions of the Kawaii Workbench applied but no longer do.
+// The "expand" cursor animates all the time, which keeps VS Code redrawing.
+const DROPPED_SETTINGS = { 'editor.cursorBlinking': 'expand' };
+
+/** Put back settings we applied in older versions, if they still hold our value. */
+async function dropOldSettings(context) {
+  const changed = context.globalState.get(CHANGED_KEY);
+  if (!changed) return;
+  const conf = vscode.workspace.getConfiguration();
+  let dirty = false;
+  for (const [key, ours] of Object.entries(DROPPED_SETTINGS)) {
+    if (!(key in changed)) continue;
+    const info = conf.inspect(key);
+    if (info && info.globalValue === ours) await conf.update(key, changed[key], vscode.ConfigurationTarget.Global);
+    delete changed[key];
+    dirty = true;
+  }
+  if (dirty) await context.globalState.update(CHANGED_KEY, changed);
+}
+
 async function checkKawaiiAfterUpdate(context) {
   if (!context.globalState.get(ENABLED_KEY)) return;
   let message;

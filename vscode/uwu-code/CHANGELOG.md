@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.1
+
+- **Kawaii Workbench is much lighter.** The little looping animations (the floating mascot,
+  heartbeats, hops and wiggles) now play a few times and then rest, instead of running forever
+  and keeping VS Code busy redrawing. Idle CPU dropped from about 100% to about 16% (software
+  rendering).
+- The Workbench no longer sets the animated `"expand"` cursor, and switches it back to normal on
+  installs where it set it before (only if you haven't changed it since).
+- Calm mode (Reduce Motion) uses cheaper selectors, which also helps scrolling.
+- **Tab labels are centred again.** With VS Code's classic tab layout, the text sat low in its
+  pill, the file icon was clipped, and the ✕ sat high.
+
 ## 0.4.0
 
 - **The falling sakura petals are gone,** from both the editor and the Kawaii Workbench window.
