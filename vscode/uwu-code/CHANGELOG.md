@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.2
+
+- Kawaii Workbench: the count on activity-bar icons (like Source Control's number of changes) sits
+  in the icon's top-right corner instead of hanging off the bottom and getting cut off.
+- Kawaii Workbench: the panel tabs (Problems, Output, Debug Console, Terminal, Ports) are evenly
+  padded pills; the text no longer touches the pill's edges or spills out of it, and the modern
+  layout's extra box behind the active tab is gone.
+
 ## 0.4.1
 
 - **Kawaii Workbench is much lighter.** The little looping animations (the floating mascot,

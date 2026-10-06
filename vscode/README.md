@@ -70,11 +70,11 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 > **Quick way:** `./uwu.sh install vscode` from the repo root.
 
 ```sh
-code --install-extension vscode/uwu-code-0.4.1.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.4.2.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.4.1.vsix`](uwu-code-0.4.1.vsix).
+[`uwu-code-0.4.2.vsix`](uwu-code-0.4.2.vsix).
 
 Then do the following:
 1. `Ctrl+K Ctrl+T` → **uwu strawberry-milk night** or **uwu sakura cream day**
@@ -126,5 +126,5 @@ rendering the remaining cost is much smaller.
 ```sh
 python3 tools/vscode_theme.py      # colour themes from tools/palette.py
 python3 tools/kawaii_assets.py     # Kawaii Workbench icons/mascot + the uwu cuties file icons
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.1.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.2.vsix
 ```
