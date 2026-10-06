@@ -106,8 +106,8 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
   :is(.part.sidebar, .part.editor > .content) {
     box-shadow: 0 0 0 1.5px var(--k-line-strong), 0 10px 30px #0a000f55, 0 0 26px var(--k-glow) !important;
   }
-  /* stickers: a bow in the editor's button row (just left of the split button,
-     in the active editor group only), a paw print on the side bar */
+  /* sticker: a bow in the editor's button row (just left of the split button,
+     in the active editor group only) */
   .editor-group-container.active > .title .editor-actions {
     display: flex !important;
     align-items: center;
@@ -122,18 +122,6 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
     pointer-events: none;
     transform: rotate(12deg);
     animation: uwu-wiggle-slow 7s ease-in-out 2;
-  }
-  .part.sidebar::after {
-    content: "";
-    position: absolute;
-    right: 14px;
-    bottom: 12px;
-    width: 46px;
-    height: 46px;
-    background: var(--uwu-paw) center / contain no-repeat;
-    opacity: .35;
-    transform: rotate(-16deg);
-    pointer-events: none;
   }
   .part.editor, .part.sidebar > .content, .split-view-view, .monaco-sash { background: transparent !important; }
 

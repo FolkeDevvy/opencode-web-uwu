@@ -33,7 +33,7 @@ Palette, then reload. Here's what it adds:
 | --- | --- |
 | **Window** | A boot splash. Floating, rounded candy panels on a dotted pastel window. |
 | **Look** | The rounded Nunito font everywhere. A gradient title bar with the "uwu IDE" brand. |
-| **Icons & stickers** | Custom-drawn icons in a floating dock (a folder-heart, a cat face, a sakura for settings…). Bow and paw stickers. |
+| **Icons & stickers** | Custom-drawn icons in a floating dock (a folder-heart, a cat face, a sakura for settings…). A bow sticker by the editor buttons. |
 | **Tabs & lists** | Candy-pill tabs, with a beating ♥ on unsaved files. ♡ / ♥ tree arrows, and icons that wiggle on hover. |
 | **Popups** | A command palette with a rainbow border. Bouncy menus, speech-bubble notifications, and dialogs with the mascot. |
 | **Effects** | Heart bursts wherever you click, sparkles out of the cursor while you type, and confetti when you save. |
@@ -70,11 +70,11 @@ script to **VS Code's own files**. It's the same technique the popular "custom C
 > **Quick way:** `./uwu.sh install vscode` from the repo root.
 
 ```sh
-code --install-extension vscode/uwu-code-0.4.3.vsix   # from the repo root
+code --install-extension vscode/uwu-code-0.4.4.vsix   # from the repo root
 ```
 
 You can also use **Extensions** → `···` → **Install from VSIX…** and pick
-[`uwu-code-0.4.3.vsix`](uwu-code-0.4.3.vsix).
+[`uwu-code-0.4.4.vsix`](uwu-code-0.4.4.vsix).
 
 Then do the following:
 1. `Ctrl+K Ctrl+T` → **uwu strawberry-milk night** or **uwu sakura cream day**
@@ -126,5 +126,5 @@ rendering the remaining cost is much smaller.
 ```sh
 python3 tools/vscode_theme.py      # colour themes from tools/palette.py
 python3 tools/kawaii_assets.py     # Kawaii Workbench icons/mascot + the uwu cuties file icons
-cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.3.vsix
+cd vscode/uwu-code && npx @vscode/vsce package --skip-license --out ../uwu-code-0.4.4.vsix
 ```

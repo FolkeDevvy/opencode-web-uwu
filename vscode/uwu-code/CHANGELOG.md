@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4
+
+- Kawaii Workbench: removed the paw-print sticker from the side bar's bottom corner.
+
 ## 0.4.3
 
 - Kawaii Workbench: the bow sticker moved from the editor card's corner, where it sat on top of
