@@ -324,6 +324,12 @@
     transition: transform .25s var(--uwu-bounce), background .2s !important;
   }
   [data-slot=titlebar-tab-item]:hover { transform: translateY(-1px) !important; }
+  /* opencode paints a solid square behind the ✕ to cover long titles. The title
+     already fades out on its own, so let the pill show through instead */
+  [data-slot=titlebar-tab-item] [data-slot=tab-close] {
+    background: transparent !important;
+    border-radius: 99px !important;
+  }
   [data-slot=titlebar-tab-item]:is([data-selected], [aria-selected=true], [data-active]) {
     background: var(--v2-background-bg-layer-02) !important;
     box-shadow: 0 0 0 1px var(--v2-border-border-strong), 0 0 14px var(--uwu-glow) !important;

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.3
+
+- Kawaii Workbench: the bow sticker moved from the editor card's corner, where it sat on top of
+  the editor buttons, into the button row just left of the split-editor button (in the active
+  editor group).
+
 ## 0.4.2
 
 - Kawaii Workbench: the count on activity-bar icons (like Source Control's number of changes) sits

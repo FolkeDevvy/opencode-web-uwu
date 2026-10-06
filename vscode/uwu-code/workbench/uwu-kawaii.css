@@ -106,17 +106,20 @@ body:has(> .monaco-workbench[class*="uwu-code-themes-uwu-"].vs) {
   :is(.part.sidebar, .part.editor > .content) {
     box-shadow: 0 0 0 1.5px var(--k-line-strong), 0 10px 30px #0a000f55, 0 0 26px var(--k-glow) !important;
   }
-  /* stickers: a bow on the editor card, a paw print on the side bar */
-  .part.editor > .content::after {
+  /* stickers: a bow in the editor's button row (just left of the split button,
+     in the active editor group only), a paw print on the side bar */
+  .editor-group-container.active > .title .editor-actions {
+    display: flex !important;
+    align-items: center;
+  }
+  .editor-group-container.active > .title .editor-actions::before {
     content: "";
-    position: absolute;
-    top: -6px;
-    right: 18px;
-    width: 44px;
-    height: 44px;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
     background: var(--uwu-bow) center / contain no-repeat;
     pointer-events: none;
-    z-index: 30;
     transform: rotate(12deg);
     animation: uwu-wiggle-slow 7s ease-in-out 2;
   }
